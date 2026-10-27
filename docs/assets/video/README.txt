@@ -6,6 +6,10 @@ Save each clip in this folder under the file name shown. Download them by hand f
 A missing file just shows the animated colour background. Replace any clip with the church's own footage
 by saving it under the same name (short, muted MP4, 10 to 30 seconds, 720p).
 
+Shortcut, from the project folder:
+  python3 videos.py --open        opens the 11 clip pages; click Download (720p) on each
+  python3 videos.py ~/Downloads   renames the downloads and copies them here
+
 hero.mp4  <-  https://mixkit.co/free-stock-video/guitarist-playing-on-stage-486/   (Guitarist on stage (home hero))
 love-god.mp4  <-  https://mixkit.co/free-stock-video/a-long-haired-woman-singing-on-stage-478/   (Singer on stage (story: Love God))
 love-people.mp4  <-  https://mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537/   (Friends laughing (story: Love People))

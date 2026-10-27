@@ -12,6 +12,8 @@ Placeholders used in the sources:
   {{url:slug}} {{url:slug#id}}   link to a page        {{asset:path}}     file under assets/
   {{video:slot}} {{video:slot:eager}}  background video  {{icon:name}}      inline SVG icon
   {{logo}} church logo (falls back to {{mark}})  {{mark}} {{aurora}} {{wave}} {{wave:top}}  decorations  {{cur:slug}}  current-page class in the nav
+  {{logo3d:hero|page|cta|badge}}  animated 3D logo   {{logo_defs}}  shared SVG symbol and gradients (once, in the header)
+  Every <section class="section dark"> also gets a layer of 3D logos drifting up through its background.
 
 Run:  python3 build.py
 """
@@ -26,7 +28,7 @@ SRC = ROOT / "src"
 SITE = ROOT / "docs"  # GitHub Pages serves this folder (Settings > Pages > main, /docs)
 THEME = ROOT / "wordpress" / "one-christian-church"
 SITE_NAME = "One Christian Church"
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 
 # Placeholder footage: Mixkit clips under the Mixkit Stock Video Free License (each clip page checked).
 # Mixkit's terms don't allow linking to their files, so the site never streams from Mixkit:
@@ -78,12 +80,37 @@ ICONS = {
 
 MARK = (ROOT / "assets" / "img" / "logo-mark.svg").read_text().strip()  # the church logo, redrawn as a vector
 AURORA = '<div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div>'
+# The 3D logo is a stack of copies of the mark, each pushed a little further back in Z, so it turns like a solid
+# object. Every copy is a <use> of one shared symbol, so the paths are only in the page once.
+LOGO_VIEWBOX = re.search(r'viewBox="([^"]+)"', MARK).group(1)
+HOLO_STOPS = ('<stop offset="0" stop-color="#BEDCEB"/><stop offset=".17" stop-color="#18D1C0"/><stop offset=".33" stop-color="#B6F03C"/>'
+              '<stop offset=".5" stop-color="#FFC93C"/><stop offset=".67" stop-color="#FF2D87"/><stop offset=".83" stop-color="#7B3FF2"/>'
+              '<stop offset="1" stop-color="#4F5BFF"/>')
+LOGO_DEFS = (
+    '<svg class="occ-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>'
+    f'<symbol id="occ-logo" viewBox="{LOGO_VIEWBOX}">{"".join(re.findall(r"<path [^>]*/>", MARK))}</symbol>'
+    f'<linearGradient id="occ-holo" gradientUnits="userSpaceOnUse" x1="50" y1="25" x2="190" y2="170">{HOLO_STOPS}</linearGradient>'
+    f'<linearGradient id="occ-holo-live" gradientUnits="userSpaceOnUse" x1="66" y1="42" x2="176" y2="155" spreadMethod="reflect">{HOLO_STOPS}'
+    '<animateTransform attributeName="gradientTransform" type="rotate" values="0 121 98.5;360 121 98.5" dur="16s" repeatCount="indefinite"/></linearGradient>'
+    '<linearGradient id="occ-sheen" gradientUnits="userSpaceOnUse" x1="34" y1="11.5" x2="208" y2="185.5">'
+    '<stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/>'
+    '<animateTransform attributeName="gradientTransform" type="translate" values="-180 -180;180 180;180 180" keyTimes="0;.35;1" dur="7s" repeatCount="indefinite"/></linearGradient>'
+    '</defs></svg>')
+DEPTH_COLORS = ("#C04BFF", "#5B2FD6", "#150D36")  # side colours, front to back
+LOGO3D = {"hero": 9, "page": 8, "cta": 9, "badge": 5}  # depth layers per size
+# Drifting logos per dark section: (left %, size px, seconds to rise, start offset 0-1, opacity, seconds per turn)
+DRIFT_LAYOUTS = [
+    [(5, 160, 48, .15, .45, 24), (28, 70, 34, .62, .36, 16), (70, 230, 62, .45, .34, 32), (89, 100, 40, .85, .42, 20)],
+    [(12, 104, 40, .70, .40, 18), (46, 60, 30, .25, .32, 14), (63, 190, 56, .90, .38, 28), (84, 130, 44, .35, .44, 22)],
+    [(3, 210, 58, .55, .34, 30), (36, 86, 38, .05, .38, 18), (58, 64, 32, .75, .32, 15), (80, 170, 50, .30, .42, 26)],
+]
 WAVE = ('<svg class="wave{cls}" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">'
         '<path d="M0 46c120-26 240-38 360-24s240 52 360 52 240-40 360-50 240 6 360 26v40H0z"/></svg>')
 
 PAGE_HERO = """<section class="hero hero-page">
   <div class="media">{aurora}{video}</div>
   <div class="tint tint-color"></div><div class="tint tint-dark"></div>
+  <div class="hero-logo">{{{{logo3d:page}}}}</div>
   <div class="wrap hero-copy">
     <p class="kicker">{kicker}</p>
     <h1>{heading}</h1>
@@ -131,6 +158,39 @@ def icon(name: str) -> str:
             f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[name]}</svg>')
 
 
+def _mix(a: str, b: str, t: float) -> str:
+    pa, pb = (int(a[i:i + 2], 16) for i in (1, 3, 5)), (int(b[i:i + 2], 16) for i in (1, 3, 5))
+    return "#" + "".join(f"{round(x + (y - x) * t):02X}" for x, y in zip(pa, pb))
+
+
+def logo_stack(depth: int, sheen: bool) -> str:
+    def layer(cls, i, color=""):
+        style = f"--i:{i}" + (f";--c:{color}" if color else "")
+        return f'<svg class="l3 {cls}" viewBox="{LOGO_VIEWBOX}" style="{style}"><use href="#occ-logo"/></svg>'
+    a, b, c = DEPTH_COLORS
+    sides = []
+    for i in range(depth, 0, -1):
+        t = (i - 1) / max(1, depth - 1)
+        sides.append(layer("l3-side", i, _mix(a, b, t * 2) if t < .5 else _mix(b, c, t * 2 - 1)))
+    return layer("l3-back", depth + 1) + "".join(sides) + layer("l3-front", 0) + (layer("l3-sheen", -0.3) if sheen else "")
+
+
+def logo3d(kind: str) -> str:
+    big = kind != "badge"
+    tilt = " data-tilt" if kind in ("hero", "page") else ""  # follows the pointer
+    glow = '<span class="l3-glow"></span>' if big else ""
+    return (f'<div class="logo3d logo3d-{kind}" aria-hidden="true"{tilt}>{glow}'
+            f'<div class="l3-tilt"><div class="l3-spin">{logo_stack(LOGO3D[kind], big)}</div></div></div>')
+
+
+def drift(n: int) -> str:
+    out = []
+    for x, size, rise, start, opacity, turn in DRIFT_LAYOUTS[n % len(DRIFT_LAYOUTS)]:
+        out.append(f'<span class="dl" style="--x:{x}%;--s:{size}px;--t:{rise}s;--d:-{round(rise * start, 1)}s;--o:{opacity};--y:{round(85 - start * 70)}%">'
+                   f'<span class="dl-spin" style="--r:{turn}s">{logo_stack(4, False)}</span></span>')
+    return f'<div class="drift" aria-hidden="true">{"".join(out)}</div>'
+
+
 def video_tag(slot: str, eager: bool) -> str:
     attr = "src" if eager else "data-src"
     loaded = ' data-loaded="1"' if eager else ""
@@ -143,7 +203,10 @@ def video_readme() -> str:
              "Save each clip in this folder under the file name shown. Download them by hand from the Mixkit page",
              "(choose the 720p download); Mixkit's terms don't allow linking to their files or scripted downloads.",
              "A missing file just shows the animated colour background. Replace any clip with the church's own footage",
-             "by saving it under the same name (short, muted MP4, 10 to 30 seconds, 720p).", ""]
+             "by saving it under the same name (short, muted MP4, 10 to 30 seconds, 720p).", "",
+             "Shortcut, from the project folder:",
+             "  python3 videos.py --open        opens the 11 clip pages; click Download (720p) on each",
+             "  python3 videos.py ~/Downloads   renames the downloads and copies them here", ""]
     for slot, (_, page, label) in VIDEOS.items():
         lines.append(f"{slot}.mp4  <-  https://mixkit.co/free-stock-video/{page}/   ({label})")
     return "\n".join(lines) + "\n"
@@ -168,7 +231,10 @@ def static_logo() -> str:
 
 
 def common(text: str) -> str:
-    text = text.replace("{{mark}}", MARK).replace("{{aurora}}", AURORA)
+    text = text.replace("{{mark}}", MARK).replace("{{aurora}}", AURORA).replace("{{logo_defs}}", LOGO_DEFS)
+    text = re.sub(r"\{\{logo3d:(\w+)\}\}", lambda m: logo3d(m.group(1)), text)
+    sections = iter(range(100))
+    text = re.sub(r'(<section class="section dark"[^>]*>)', lambda m: m.group(1) + drift(next(sections)), text)
     text = text.replace("{{wave:top}}", WAVE.format(cls=" top")).replace("{{wave}}", WAVE.format(cls=""))
     return re.sub(r"\{\{icon:(\w+)\}\}", lambda m: icon(m.group(1)), text)
 
@@ -216,10 +282,10 @@ def hero_for(meta) -> str:
 
 
 def build_static(parsed, header, footer):
-    # Everything in docs/ is regenerated except docs/assets/video/, where the downloaded clips live.
+    # Everything in docs/ is regenerated except docs/assets/video/ (the downloaded clips) and a custom-domain CNAME.
     if SITE.exists():
         for p in SITE.iterdir():
-            if p.name != "assets":
+            if p.name not in ("assets", "CNAME"):
                 shutil.rmtree(p) if p.is_dir() else p.unlink()
         for p in (SITE / "assets").iterdir() if (SITE / "assets").exists() else []:
             if p.name != "video":

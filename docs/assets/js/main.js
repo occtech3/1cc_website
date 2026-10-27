@@ -189,6 +189,35 @@ window.addEventListener("scroll", request, { passive: true });
 window.addEventListener("resize", request);
 frame();
 
+/* 3D logos: lean toward the pointer, and stop animating while off screen.
+   The colour shimmer runs in the shared SVG gradients, so it pauses whenever no big logo is in view. */
+const defs = document.querySelector(".occ-defs");
+const shimmer = new Set();
+const syncShimmer = () => {
+  if (!defs || !defs.pauseAnimations) return;
+  if (reduceMotion || !shimmer.size) defs.pauseAnimations(); else defs.unpauseAnimations();
+};
+const lio = new IntersectionObserver((entries) => entries.forEach((en) => {
+  en.target.classList.toggle("is-off", !en.isIntersecting);
+  if (en.target.matches(".logo3d:not(.logo3d-badge)")) {
+    if (en.isIntersecting) shimmer.add(en.target); else shimmer.delete(en.target);
+  }
+  syncShimmer();
+}), { rootMargin: "120px 0px" });
+document.querySelectorAll(".logo3d, .drift").forEach((el) => lio.observe(el));
+syncShimmer();
+const tilters = [...document.querySelectorAll("[data-tilt]")];
+if (tilters.length && !reduceMotion && window.matchMedia("(pointer: fine)").matches) {
+  window.addEventListener("pointermove", (e) => {
+    const x = e.clientX / window.innerWidth - 0.5;
+    const y = e.clientY / window.innerHeight - 0.5;
+    tilters.forEach((el) => {
+      el.style.setProperty("--ry", `${(x * 34).toFixed(1)}deg`);
+      el.style.setProperty("--rx", `${(y * -22).toFixed(1)}deg`);
+    });
+  }, { passive: true });
+}
+
 /* Carousels */
 document.querySelectorAll("[data-carousel]").forEach((c) => {
   const track = c.querySelector(".carousel-track");

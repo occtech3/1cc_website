@@ -5,6 +5,7 @@ nav: home
 <section class="hero hero-home">
   <div class="media">{{aurora}}{{video:hero:eager}}</div>
   <div class="tint tint-color"></div><div class="tint tint-dark"></div>
+  <div class="hero-logo">{{logo3d:hero}}</div>
   <div class="wrap hero-copy">
     <span class="live-pill"><span class="live-dot"></span>Sundays &middot; 9:00 coffee &middot; 10:00 worship</span>
     <h1><span class="line"><span>Love God.</span></span><span class="line"><span class="grad-text">Love People.</span></span></h1>
@@ -30,7 +31,7 @@ nav: home
       <p class="kicker">Welcome home</p>
       <div class="badge-spin" aria-hidden="true">
         <svg viewBox="0 0 150 150"><defs><path id="circ" d="M75 75m-58 0a58 58 0 1 1 116 0a58 58 0 1 1-116 0"/></defs><text><textPath href="#circ">Love God &#8226; Love People &#8226; Walk with Jesus &#8226;</textPath></text></svg>
-        {{mark}}
+        {{logo3d:badge}}
       </div>
     </div>
     <div>
@@ -79,7 +80,7 @@ nav: home
       </a>
       <a class="vcard reveal" href="{{url:ministries#adults}}" style="--c1:#2E9BFF;--c2:#18D1C0">
         <div class="media">{{video:students}}</div><div class="vcard-tint"></div>
-        <div class="vcard-body"><span class="chip" style="--chip:#FF2D87">Men, women &amp; seniors</span><h3>Adults</h3><p>Bible studies, Men's Fire, Women's Fire, Crafters, breakfasts and more.</p><span class="vcard-go">Explore {{icon:arrow}}</span></div>
+        <div class="vcard-body"><span class="chip" style="--chip:#FF2D87">Young adults to seniors</span><h3>Adults</h3><p>Young Adults on Sunday nights, plus Bible studies, Men's Fire, Women's Fire, Crafters and more.</p><span class="vcard-go">Explore {{icon:arrow}}</span></div>
       </a>
     </div>
   </div>
@@ -114,10 +115,10 @@ nav: home
       <a class="text-link reveal" href="{{url:events}}">All events {{icon:arrow}}</a>
     </div>
     <div class="week-grid">
-      <div class="tile t-pink reveal"><span class="day">Sun</span><h3>Fellowship &amp; Worship</h3><p>9:00am coffee &middot; 10:00am service</p></div>
+      <div class="tile t-pink reveal"><span class="day">Sun</span><h3>Fellowship &amp; Worship</h3><p>9:00am coffee &middot; 10:00am service</p><p class="tile-more">6:30pm &middot; Young Adults</p></div>
       <div class="tile t-orange reveal"><span class="day">Mon</span><h3>Women's Fire</h3><p>6:30pm &middot; Prayer Room</p></div>
       <div class="tile t-yellow reveal"><span class="day">Tue</span><h3>Crafters</h3><p>6:30pm &middot; crafts, snack &amp; devotional</p></div>
-      <div class="tile t-aqua reveal"><span class="day">Wed</span><h3>OCC Youth</h3><p>6:30&ndash;8:00pm &middot; grades 6&ndash;12</p></div>
+      <div class="tile t-lime reveal"><span class="day">Wed</span><h3>OCC Youth</h3><p>6:30&ndash;8:00pm &middot; grades 6&ndash;12</p></div>
       <div class="tile t-violet reveal"><span class="day">Thu</span><h3>Men's Fire</h3><p>6:30pm &middot; 3rd Thursday monthly</p></div>
     </div>
   </div>
@@ -131,6 +132,7 @@ nav: home
         <div class="carousel-nav reveal"><button class="round-btn prev" type="button" data-dir="-1" aria-label="Previous">{{icon:arrow}}</button><button class="round-btn" type="button" data-dir="1" aria-label="Next">{{icon:arrow}}</button></div>
       </div>
       <div class="carousel-track">
+        <a class="promo p7 reveal" href="{{url:ministries#young-adults}}"><svg class="ico ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2a5 5 0 0 1 5.5 4.8"/></svg><div><span class="when">Sundays &middot; 6:30pm</span><h3>Young Adults</h3><p>Sunday nights together. Come as you are.</p></div></a>
         <a class="promo p1 reveal" href="{{url:events}}"><svg class="ico ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c4 0 7-3 7-7 0-5-4-7-5-11-2 2-3 4-3 6-1-1-2-2-2-4-2 2-4 5-4 9 0 4 3 7 7 7z"/></svg><div><span class="when">3rd Thursday &middot; 6:30pm</span><h3>Men's Fire</h3><p>Mark Spencer speaks in the Prayer Room.</p></div></a>
         <a class="promo p2 reveal" href="{{url:events}}"><svg class="ico ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><div><span class="when">Mondays &middot; 6:30pm</span><h3>Women's Fire</h3><p>Bible study in the Prayer Room with Becky Smart.</p></div></a>
         <a class="promo p3 reveal" href="{{url:ministries#griefshare}}"><svg class="ico ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c-3-2-8-5-8-10V5l4 2 4-4 4 4 4-2v6c0 5-5 8-8 10z"/></svg><div><span class="when">Saturdays &middot; 10am</span><h3>GriefShare</h3><p>A 13-week support group. You don't have to grieve alone.</p></div></a>
