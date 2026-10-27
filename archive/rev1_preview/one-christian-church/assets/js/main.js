@@ -1,0 +1,216 @@
+// One Christian Church design preview: header, menu, background videos, scroll effects, mock forms.
+document.documentElement.classList.add("js");
+
+const body = document.body;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage blocked */ } },
+};
+
+/* Header: solid after scrolling, hides on the way down, returns on the way up */
+const header = document.querySelector("[data-header]");
+let lastY = window.scrollY;
+const onScroll = () => {
+  const y = window.scrollY;
+  if (header) {
+    header.classList.toggle("is-scrolled", y > 30);
+    header.classList.toggle("is-hidden", y > 400 && y > lastY && !body.classList.contains("menu-open"));
+  }
+  lastY = y;
+};
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+/* Mobile menu */
+const toggle = document.querySelector("[data-menu-toggle]");
+if (toggle) {
+  const menuIcon = toggle.innerHTML;
+  const closeIcon = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+  const setOpen = (open) => {
+    body.classList.toggle("menu-open", open);
+    body.style.overflow = open ? "hidden" : "";
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    toggle.innerHTML = open ? closeIcon : menuIcon;
+  };
+  toggle.addEventListener("click", () => setOpen(!body.classList.contains("menu-open")));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
+  document.querySelectorAll(".primary-nav a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+}
+
+/* Background videos: load when near the viewport, play only while visible, fade in once frames arrive.
+   Story videos are driven by the story controller below. */
+let videosPaused = reduceMotion || store.get("occ-video-paused") === "1";
+const videos = [...document.querySelectorAll("video.bg-video")];
+const load = (v) => {
+  if (v.dataset.loaded) return;
+  v.querySelectorAll("source[data-src]").forEach((s) => { s.src = s.dataset.src; });
+  v.dataset.loaded = "1";
+  v.load();
+};
+const tryPlay = (v) => {
+  if (videosPaused) return;
+  load(v);
+  const p = v.play();
+  if (p && p.catch) p.catch(() => {});
+};
+videos.forEach((v) => {
+  v.muted = true;
+  v.addEventListener("playing", () => v.classList.add("is-playing"));
+  v.addEventListener("loadeddata", () => { if (videosPaused) v.classList.add("is-playing"); });
+});
+const vio = new IntersectionObserver((entries) => entries.forEach((en) => {
+  const v = en.target;
+  v.dataset.visible = en.isIntersecting ? "1" : "";
+  if (v.closest(".story")) return;
+  if (en.isIntersecting) tryPlay(v); else v.pause();
+}), { rootMargin: "200px 0px" });
+videos.forEach((v) => vio.observe(v));
+
+const toggles = document.querySelectorAll("[data-video-toggle]");
+const playIcon = '<svg class="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+const pauseIcon = '<svg class="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+const syncToggles = () => toggles.forEach((b) => {
+  b.innerHTML = (videosPaused ? playIcon : pauseIcon) + `<span>${videosPaused ? "Play video" : "Pause video"}</span>`;
+  b.setAttribute("aria-pressed", String(videosPaused));
+});
+toggles.forEach((b) => b.addEventListener("click", () => {
+  videosPaused = !videosPaused;
+  store.set("occ-video-paused", videosPaused ? "1" : "0");
+  videos.forEach((v) => {
+    if (videosPaused) v.pause();
+    else if (v.dataset.visible && (!v.closest(".story") || v.classList.contains("is-active"))) tryPlay(v);
+  });
+  syncToggles();
+}));
+syncToggles();
+if (videosPaused) videos.forEach(load);
+
+/* Hero rotating words */
+document.querySelectorAll("[data-rotator]").forEach((el) => {
+  const items = [...el.children];
+  if (items.length < 2 || reduceMotion) return;
+  let i = 0;
+  setInterval(() => {
+    const cur = items[i];
+    cur.classList.remove("is-on");
+    cur.classList.add("is-out");
+    setTimeout(() => cur.classList.remove("is-out"), 700);
+    i = (i + 1) % items.length;
+    items[i].classList.add("is-on");
+  }, 2600);
+});
+
+/* Reveal on scroll */
+const rio = new IntersectionObserver((entries) => entries.forEach((en) => {
+  if (en.isIntersecting) { en.target.classList.add("is-in"); rio.unobserve(en.target); }
+}), { rootMargin: "0px 0px -10% 0px" });
+document.querySelectorAll(".reveal").forEach((el) => {
+  const group = el.parentElement ? [...el.parentElement.children].filter((c) => c.classList.contains("reveal")) : [];
+  const idx = group.indexOf(el);
+  if (idx > 0) el.style.transitionDelay = `${Math.min(idx, 5) * 90}ms`;
+  rio.observe(el);
+});
+
+/* Statement: words light up as it scrolls through the viewport */
+const fills = [...document.querySelectorAll("[data-fill]")].map((el) => {
+  const walk = (node) => {
+    [...node.childNodes].forEach((n) => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          const s = document.createElement("span");
+          s.className = "w";
+          s.textContent = part;
+          frag.appendChild(s);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+  };
+  walk(el);
+  return { el, words: [...el.querySelectorAll(".w")] };
+});
+
+/* Story: a pinned section whose video and words change with scroll position */
+const stories = [...document.querySelectorAll("[data-story]")].map((el) => ({
+  el,
+  vids: [...el.querySelectorAll(".story-media video")],
+  panels: [...el.querySelectorAll(".story-panel")],
+  bars: [...el.querySelectorAll(".story-progress i")],
+  active: -1,
+}));
+const setStory = (s, idx) => {
+  if (idx === s.active) return;
+  s.active = idx;
+  s.el.dataset.active = String(idx);
+  s.panels.forEach((p, i) => p.classList.toggle("is-active", i === idx));
+  s.vids.forEach((v, i) => {
+    v.classList.toggle("is-active", i === idx);
+    if (i === idx) tryPlay(v);
+    else if (Math.abs(i - idx) === 1) load(v);
+    else v.pause();
+  });
+  s.vids.forEach((v, i) => { if (i !== idx) setTimeout(() => { if (s.active !== i) v.pause(); }, 1000); });
+};
+
+/* Parallax */
+const parallax = [...document.querySelectorAll("[data-parallax]")];
+
+let ticking = false;
+const frame = () => {
+  ticking = false;
+  const vh = window.innerHeight;
+  fills.forEach(({ el, words }) => {
+    const r = el.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.35)));
+    const n = reduceMotion ? words.length : Math.round(p * words.length);
+    words.forEach((w, i) => w.classList.toggle("on", i < n));
+  });
+  stories.forEach((s) => {
+    const r = s.el.getBoundingClientRect();
+    const total = s.el.offsetHeight - vh;
+    const p = Math.min(0.9999, Math.max(0, -r.top / total));
+    const n = s.panels.length;
+    setStory(s, Math.floor(p * n));
+    s.bars.forEach((b, i) => b.style.setProperty("--p", `${Math.min(100, Math.max(0, (p * n - i) * 100))}%`));
+  });
+  if (!reduceMotion) parallax.forEach((el) => {
+    const r = el.parentElement.getBoundingClientRect();
+    const speed = parseFloat(el.dataset.parallax) || 0.15;
+    el.style.transform = `translate3d(0, ${((r.top + r.height / 2) - vh / 2) * -speed}px, 0) scale(1.12)`;
+  });
+};
+const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
+window.addEventListener("scroll", request, { passive: true });
+window.addEventListener("resize", request);
+frame();
+
+/* Carousels */
+document.querySelectorAll("[data-carousel]").forEach((c) => {
+  const track = c.querySelector(".carousel-track");
+  const step = () => (track.firstElementChild ? track.firstElementChild.getBoundingClientRect().width + 22 : 320);
+  c.querySelectorAll("[data-dir]").forEach((b) => b.addEventListener("click", () => {
+    track.scrollBy({ left: step() * Number(b.dataset.dir), behavior: reduceMotion ? "auto" : "smooth" });
+  }));
+});
+
+/* Mock forms (real forms come from a form plugin in WordPress) */
+document.querySelectorAll("[data-mock-form]").forEach((form) => {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const ok = form.querySelector(".form-ok");
+    if (ok) ok.hidden = false;
+    form.reset();
+  });
+});
+
+/* Preview pill */
+const pill = document.querySelector("[data-preview-pill]");
+if (pill) {
+  if (store.get("occ-pill-closed") === "1") pill.remove();
+  else pill.querySelector("button").addEventListener("click", () => { store.set("occ-pill-closed", "1"); pill.remove(); });
+}

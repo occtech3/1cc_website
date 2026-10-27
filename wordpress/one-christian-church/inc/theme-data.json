@@ -1,0 +1,80 @@
+{
+ "version": "0.2.0",
+ "pages": [
+  {
+   "slug": "new-here",
+   "title": "Plan a Visit"
+  },
+  {
+   "slug": "about",
+   "title": "About"
+  },
+  {
+   "slug": "ministries",
+   "title": "Ministries"
+  },
+  {
+   "slug": "events",
+   "title": "Events"
+  },
+  {
+   "slug": "listen",
+   "title": "Watch &amp; Listen"
+  },
+  {
+   "slug": "give",
+   "title": "Give"
+  },
+  {
+   "slug": "contact",
+   "title": "Contact"
+  }
+ ],
+ "descriptions": {
+  "404": "Page not found.",
+  "about": "Who we are, what we believe and the leaders who serve One Christian Church in Greenwood, Indiana.",
+  "contact": "Contact One Christian Church in Greenwood, Indiana. Call 317-787-8236 or email onecc.office@gmail.com.",
+  "events": "Upcoming events and weekly gatherings at One Christian Church in Greenwood, Indiana.",
+  "give": "Give to One Christian Church online, by text or in person.",
+  "home": "One Christian Church in Greenwood, Indiana. Love God. Love People. Walk with Jesus. Make Disciples. Join us Sundays at 10:00am.",
+  "listen": "Watch One Christian Church live on Facebook, on YouTube, and listen to Pastor Jerry on Freedom 95 Radio.",
+  "ministries": "Kids, youth, adult, house church and GriefShare ministries at One Christian Church in Greenwood, Indiana.",
+  "new-here": "Plan your first visit to One Christian Church in Greenwood, Indiana. Sundays at 10:00am with coffee at 9:00."
+ },
+ "videos": {
+  "hero": {
+   "label": "Guitarist on stage (home hero)"
+  },
+  "love-god": {
+   "label": "Singer on stage (story: Love God)"
+  },
+  "love-people": {
+   "label": "Friends laughing (story: Love People)"
+  },
+  "walk": {
+   "label": "People praying, holding hands (story: Walk with Jesus)"
+  },
+  "disciples": {
+   "label": "Crowd at a concert (story: Make Disciples)"
+  },
+  "kids": {
+   "label": "Kids running on a pier (Kids)"
+  },
+  "youth": {
+   "label": "Young people group hug (Youth)"
+  },
+  "adults": {
+   "label": "Friends at a coffee shop (Adults, coffee)"
+  },
+  "students": {
+   "label": "Students talking over coffee (Events)"
+  },
+  "mic": {
+   "label": "Microphone (Watch & Listen)"
+  },
+  "guitar": {
+   "label": "Guitar close-up (Give)"
+  }
+ },
+ "fonts": "https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+}
