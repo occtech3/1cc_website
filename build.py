@@ -39,12 +39,13 @@ VIDEOS = {
     "hero": (486, "guitarist-playing-on-stage-486", "Guitarist on stage (home hero)"),
     "love-god": (478, "a-long-haired-woman-singing-on-stage-478", "Singer on stage (story: Love God)"),
     "love-people": (4537, "a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537", "Friends laughing (story: Love People)"),
-    "walk": (1514, "praying-people-holding-hands-black-and-white-shot-1514", "People praying, holding hands (story: Walk with Jesus)"),
-    "disciples": (4269, "audience-at-a-concert-4269", "Crowd at a concert (story: Make Disciples)"),
+    "walk": (4119, "stunning-sunset-seen-from-the-sea-4119", "Sunset over the sea (story: Walk with Jesus, About, GriefShare)"),
+    "disciples": (4269, "audience-at-a-concert-4269", "Crowd at a concert (story: Make Disciples, Events, Youth band)"),
     "kids": (48264, "three-kids-running-in-a-wooden-pier-48264", "Kids running on a pier (Kids)"),
-    "youth": (4709, "cheerful-young-people-giving-each-other-a-group-hug-4709", "Young people group hug (Youth)"),
-    "adults": (41813, "date-between-two-girl-friends-in-a-coffee-shop-41813", "Friends at a coffee shop (Adults, coffee)"),
-    "students": (4794, "students-in-a-cafeteria-discussing-an-assignment-4794", "Students talking over coffee (Events)"),
+    # Same clip as love-people for now; replace youth.mp4 with the church's own youth footage when there is some.
+    "youth": (4537, "a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537", "Friends laughing (OCC Youth card)"),
+    "adults": (41813, "date-between-two-girl-friends-in-a-coffee-shop-41813", "Friends at a coffee shop (First Sunday, Contact)"),
+    "students": (4794, "students-in-a-cafeteria-discussing-an-assignment-4794", "Friends talking around a table (Adults card, Plan a Visit, House Church)"),
     "mic": (4632, "microphone-in-a-party-hall-4632", "Microphone (Watch & Listen)"),
     "guitar": (483, "playing-guitar-close-up-483", "Guitar close-up (Give)"),
 }
@@ -91,18 +92,18 @@ LOGO_DEFS = (
     f'<symbol id="occ-logo" viewBox="{LOGO_VIEWBOX}">{"".join(re.findall(r"<path [^>]*/>", MARK))}</symbol>'
     f'<linearGradient id="occ-holo" gradientUnits="userSpaceOnUse" x1="50" y1="25" x2="190" y2="170">{HOLO_STOPS}</linearGradient>'
     f'<linearGradient id="occ-holo-live" gradientUnits="userSpaceOnUse" x1="66" y1="42" x2="176" y2="155" spreadMethod="reflect">{HOLO_STOPS}'
-    '<animateTransform attributeName="gradientTransform" type="rotate" values="0 121 98.5;360 121 98.5" dur="16s" repeatCount="indefinite"/></linearGradient>'
+    '<animateTransform attributeName="gradientTransform" type="rotate" values="0 121 98.5;360 121 98.5" dur="32s" repeatCount="indefinite"/></linearGradient>'
     '<linearGradient id="occ-sheen" gradientUnits="userSpaceOnUse" x1="34" y1="11.5" x2="208" y2="185.5">'
     '<stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/>'
-    '<animateTransform attributeName="gradientTransform" type="translate" values="-180 -180;180 180;180 180" keyTimes="0;.35;1" dur="7s" repeatCount="indefinite"/></linearGradient>'
+    '<animateTransform attributeName="gradientTransform" type="translate" values="-180 -180;180 180;180 180" keyTimes="0;.3;1" dur="12s" repeatCount="indefinite"/></linearGradient>'
     '</defs></svg>')
 DEPTH_COLORS = ("#C04BFF", "#5B2FD6", "#150D36")  # side colours, front to back
 LOGO3D = {"hero": 9, "page": 8, "cta": 9, "badge": 5}  # depth layers per size
 # Drifting logos per dark section: (left %, size px, seconds to rise, start offset 0-1, opacity, seconds per turn)
 DRIFT_LAYOUTS = [
-    [(5, 160, 48, .15, .45, 24), (28, 70, 34, .62, .36, 16), (70, 230, 62, .45, .34, 32), (89, 100, 40, .85, .42, 20)],
-    [(12, 104, 40, .70, .40, 18), (46, 60, 30, .25, .32, 14), (63, 190, 56, .90, .38, 28), (84, 130, 44, .35, .44, 22)],
-    [(3, 210, 58, .55, .34, 30), (36, 86, 38, .05, .38, 18), (58, 64, 32, .75, .32, 15), (80, 170, 50, .30, .42, 26)],
+    [(6, 160, 90, .20, .42, 60), (74, 220, 110, .65, .34, 75)],
+    [(10, 120, 95, .70, .40, 65), (68, 190, 105, .25, .36, 70)],
+    [(4, 200, 100, .50, .34, 72), (80, 140, 90, .05, .40, 58)],
 ]
 WAVE = ('<svg class="wave{cls}" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">'
         '<path d="M0 46c120-26 240-38 360-24s240 52 360 52 240-40 360-50 240 6 360 26v40H0z"/></svg>')

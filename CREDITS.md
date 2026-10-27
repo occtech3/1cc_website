@@ -4,18 +4,19 @@
 
 Stock clips from [Mixkit](https://mixkit.co/), each listed on its page under the **Mixkit Stock Video Free License**
 (checked clip by clip in October 2026). They stand in until the church has its own footage.
+The sunset clip (4119) was swapped in later and its licence line has not been re-checked; confirm it on its page like the others.
 
 | File | Shows | Source |
 |---|---|---|
 | `hero.mp4` | Guitarist on stage (home hero) | [mixkit.co/free-stock-video/guitarist-playing-on-stage-486](https://mixkit.co/free-stock-video/guitarist-playing-on-stage-486/) |
 | `love-god.mp4` | Singer on stage (story: Love God) | [mixkit.co/free-stock-video/a-long-haired-woman-singing-on-stage-478](https://mixkit.co/free-stock-video/a-long-haired-woman-singing-on-stage-478/) |
 | `love-people.mp4` | Friends laughing (story: Love People) | [mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537](https://mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537/) |
-| `walk.mp4` | People praying, holding hands (story: Walk with Jesus) | [mixkit.co/free-stock-video/praying-people-holding-hands-black-and-white-shot-1514](https://mixkit.co/free-stock-video/praying-people-holding-hands-black-and-white-shot-1514/) |
-| `disciples.mp4` | Crowd at a concert (story: Make Disciples) | [mixkit.co/free-stock-video/audience-at-a-concert-4269](https://mixkit.co/free-stock-video/audience-at-a-concert-4269/) |
+| `walk.mp4` | Sunset over the sea (story: Walk with Jesus, About, GriefShare) | [mixkit.co/free-stock-video/stunning-sunset-seen-from-the-sea-4119](https://mixkit.co/free-stock-video/stunning-sunset-seen-from-the-sea-4119/) |
+| `disciples.mp4` | Crowd at a concert (story: Make Disciples, Events, Youth band) | [mixkit.co/free-stock-video/audience-at-a-concert-4269](https://mixkit.co/free-stock-video/audience-at-a-concert-4269/) |
 | `kids.mp4` | Kids running on a pier (Kids) | [mixkit.co/free-stock-video/three-kids-running-in-a-wooden-pier-48264](https://mixkit.co/free-stock-video/three-kids-running-in-a-wooden-pier-48264/) |
-| `youth.mp4` | Young people group hug (Youth) | [mixkit.co/free-stock-video/cheerful-young-people-giving-each-other-a-group-hug-4709](https://mixkit.co/free-stock-video/cheerful-young-people-giving-each-other-a-group-hug-4709/) |
-| `adults.mp4` | Friends at a coffee shop (Adults, coffee) | [mixkit.co/free-stock-video/date-between-two-girl-friends-in-a-coffee-shop-41813](https://mixkit.co/free-stock-video/date-between-two-girl-friends-in-a-coffee-shop-41813/) |
-| `students.mp4` | Students talking over coffee (Events) | [mixkit.co/free-stock-video/students-in-a-cafeteria-discussing-an-assignment-4794](https://mixkit.co/free-stock-video/students-in-a-cafeteria-discussing-an-assignment-4794/) |
+| `youth.mp4` | Friends laughing (OCC Youth card), a copy of `love-people.mp4` for now | [mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537](https://mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537/) |
+| `adults.mp4` | Friends at a coffee shop (First Sunday, Contact) | [mixkit.co/free-stock-video/date-between-two-girl-friends-in-a-coffee-shop-41813](https://mixkit.co/free-stock-video/date-between-two-girl-friends-in-a-coffee-shop-41813/) |
+| `students.mp4` | Friends talking around a table (Adults card, Plan a Visit, House Church) | [mixkit.co/free-stock-video/students-in-a-cafeteria-discussing-an-assignment-4794](https://mixkit.co/free-stock-video/students-in-a-cafeteria-discussing-an-assignment-4794/) |
 | `mic.mp4` | Microphone (Watch & Listen) | [mixkit.co/free-stock-video/microphone-in-a-party-hall-4632](https://mixkit.co/free-stock-video/microphone-in-a-party-hall-4632/) |
 | `guitar.mp4` | Guitar close-up (Give) | [mixkit.co/free-stock-video/playing-guitar-close-up-483](https://mixkit.co/free-stock-video/playing-guitar-close-up-483/) |
 

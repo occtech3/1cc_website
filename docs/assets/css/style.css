@@ -524,15 +524,15 @@ p { margin: 0 0 1em; }
 .logo3d { --size: 320px; --step: calc(var(--size) / 170); position: relative; width: var(--size); height: var(--size); perspective: calc(var(--size) * 3.2); pointer-events: none; }
 .l3-tilt, .l3-spin { position: absolute; inset: 0; transform-style: preserve-3d; }
 .l3-tilt { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 1.4s cubic-bezier(.2, .8, .2, 1); }
-.l3-spin { animation: l3-sway 12s ease-in-out infinite; }
+.l3-spin { animation: l3-sway 22s ease-in-out infinite; }
 .l3 { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: var(--c); transform: translateZ(calc(var(--i) * var(--step) * -1)); }
 .l3-front, .l3-back { fill: url(#occ-holo); }
 .l3-sheen { fill: url(#occ-sheen); }
 .logo3d-hero .l3-front, .logo3d-page .l3-front, .logo3d-cta .l3-front { fill: url(#occ-holo-live); }
-.l3-glow { position: absolute; inset: 14%; border-radius: 50%; background: conic-gradient(from 0deg, #18D1C0, #7B3FF2, #FF2D87, #FFC93C, #18D1C0); filter: blur(calc(var(--size) * .13)); opacity: .55; animation: spin 18s linear infinite; }
+.l3-glow { position: absolute; inset: 14%; border-radius: 50%; background: conic-gradient(from 0deg, #18D1C0, #7B3FF2, #FF2D87, #FFC93C, #18D1C0); filter: blur(calc(var(--size) * .13)); opacity: .55; animation: spin 40s linear infinite; }
 @keyframes l3-sway {
-  0%, 100% { transform: translate3d(0, 0, 0) rotateY(-28deg) rotateX(9deg); }
-  50% { transform: translate3d(0, -4%, 0) rotateY(28deg) rotateX(-7deg); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotateY(-24deg) rotateX(8deg); }
+  50% { transform: translate3d(0, -3%, 0) rotateY(24deg) rotateX(-6deg); }
 }
 .is-off .l3-spin, .is-off .l3-glow, .is-off .dl, .is-off .dl-spin { animation-play-state: paused; }
 
@@ -543,9 +543,9 @@ p { margin: 0 0 1em; }
 .hero-page .hero-logo { top: calc(50% + var(--header-h) / 2); right: max(16px, calc((100% - var(--wrap)) / 2 - 50px)); translate: 0 -55%; }
 .cta-logo { position: absolute; z-index: -1; left: 50%; top: 50%; translate: -50% -50%; opacity: .4; pointer-events: none; }
 .cta-logo .logo3d { --size: min(84vw, 640px); }
-.cta-logo .l3-spin { animation-duration: 16s; }
+.cta-logo .l3-spin { animation-duration: 28s; }
 .badge-spin .logo3d { position: absolute; inset: 0; margin: auto; --size: 78px; }
-.badge-spin .logo3d .l3-spin { animation-duration: 7s; }
+.badge-spin .logo3d .l3-spin { animation-duration: 16s; }
 
 /* Logos drifting up through dark sections */
 .drift { position: absolute; inset: 0; z-index: 0; overflow: hidden; container-type: size; pointer-events: none; -webkit-mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent); mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent); }
@@ -587,7 +587,7 @@ p { margin: 0 0 1em; }
 }
 @media (max-width: 640px) {
   .cards > .card-feature { grid-column: auto; }
-  .drift .dl:nth-child(n+3) { display: none; }
+  .drift .dl:nth-child(n+2) { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .dl { animation: none; top: var(--y); }
