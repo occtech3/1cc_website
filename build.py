@@ -13,6 +13,7 @@ Placeholders used in the sources:
   {{video:slot}} {{video:slot:eager}}  background video  {{icon:name}}      inline SVG icon
   {{logo}} church logo (falls back to {{mark}})  {{mark}} {{aurora}} {{wave}} {{wave:top}}  decorations  {{cur:slug}}  current-page class in the nav
   {{logo3d:hero|page|cta|badge}}  animated 3D logo   {{logo_defs}}  shared SVG symbol and gradients (once, in the header)
+  {{search_attrs}}  page links for the header search (its index, assets/search-index.json, is built from every page)
   Every <section class="section dark"> also gets a layer of 3D logos drifting up through its background.
 
 Run:  python3 build.py
@@ -21,6 +22,7 @@ import html
 import json
 import re
 import shutil
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).parent
@@ -74,6 +76,7 @@ ICONS = {
     "sparkle": '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
     "music": '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
     "menu": '<path d="M4 7h16M4 12h16M4 17h16"/>',
+    "search": '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>',
     "facebook": '<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8z"/>',
     "instagram": '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/>',
     "youtube": '<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10 9 5 3-5 3z"/>',
@@ -84,6 +87,8 @@ AURORA = '<div class="aurora" aria-hidden="true"><span></span><span></span><span
 # The 3D logo is a stack of copies of the mark, each pushed a little further back in Z, so it turns like a solid
 # object. Every copy is a <use> of one shared symbol, so the paths are only in the page once.
 LOGO_VIEWBOX = re.search(r'viewBox="([^"]+)"', MARK).group(1)
+# A <use> places the symbol at 0,0 of the layer, so the layers' own viewBox starts at 0,0 (with the mark's viewBox it sat off-centre)
+LAYER_VIEWBOX = "0 0 " + " ".join(LOGO_VIEWBOX.split()[2:])
 HOLO_STOPS = ('<stop offset="0" stop-color="#BEDCEB"/><stop offset=".17" stop-color="#18D1C0"/><stop offset=".33" stop-color="#B6F03C"/>'
               '<stop offset=".5" stop-color="#FFC93C"/><stop offset=".67" stop-color="#FF2D87"/><stop offset=".83" stop-color="#7B3FF2"/>'
               '<stop offset="1" stop-color="#4F5BFF"/>')
@@ -167,7 +172,7 @@ def _mix(a: str, b: str, t: float) -> str:
 def logo_stack(depth: int, sheen: bool) -> str:
     def layer(cls, i, color=""):
         style = f"--i:{i}" + (f";--c:{color}" if color else "")
-        return f'<svg class="l3 {cls}" viewBox="{LOGO_VIEWBOX}" style="{style}"><use href="#occ-logo"/></svg>'
+        return f'<svg class="l3 {cls}" viewBox="{LAYER_VIEWBOX}" style="{style}"><use href="#occ-logo"/></svg>'
     a, b, c = DEPTH_COLORS
     sides = []
     for i in range(depth, 0, -1):
@@ -223,6 +228,78 @@ def parse(path: Path):
     return meta, body
 
 
+class PageText(HTMLParser):
+    """Splits a rendered page into search entries: each heading and the text under it, linked to the nearest element with an id.
+    In a card or list item, the text before the heading (an event's day and time, say) belongs to that card's entry."""
+    VOID = {"area", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+    SKIP = {"script", "style", "svg", "video", "button", "form", "noscript"}
+    HEADS = {"h1", "h2", "h3", "summary"}
+    ITEM_TAGS = {"article", "li", "details"}
+    ITEM_CLASSES = {"card", "big-card", "tile", "age", "vcard", "event", "leader", "promo", "story-panel"}
+
+    def __init__(self):
+        super().__init__()
+        self.stack, self.entries, self.heading, self.item = [], [], None, None
+
+    def hidden(self) -> bool:
+        return any(hide for _, _, hide in self.stack)
+
+    def handle_starttag(self, tag, attrs):
+        self.handle_data(" ")
+        if tag in self.VOID:
+            return
+        a = dict(attrs)
+        self.stack.append((tag, a.get("id"), tag in self.SKIP or a.get("aria-hidden") == "true"))
+        if self.item is None and (tag in self.ITEM_TAGS or self.ITEM_CLASSES & set((a.get("class") or "").split())):
+            self.item = {"depth": len(self.stack), "pre": [], "entry": None}
+        if tag in self.HEADS and not self.heading and not self.hidden():
+            entry = {"a": next((i for _, i, _ in reversed(self.stack) if i), ""), "h": [], "t": []}
+            if self.item and not self.item["entry"]:
+                entry["t"], self.item["entry"] = self.item["pre"], entry
+            self.entries.append(entry)
+            self.heading = tag
+
+    def handle_startendtag(self, tag, attrs):
+        pass  # <use/>, <path/> and friends never hold text
+
+    def handle_endtag(self, tag):
+        self.handle_data(" ")
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.stack[i][0] == tag:
+                del self.stack[i:]
+                break
+        if tag == self.heading:
+            self.heading = None
+        if self.item and len(self.stack) < self.item["depth"]:
+            if not self.item["entry"] and self.entries:  # a card without a heading: its text joins the entry above
+                self.entries[-1]["t"] += self.item["pre"]
+            self.item = None
+
+    def handle_data(self, data):
+        if self.hidden():
+            return
+        if self.item and not self.item["entry"]:
+            self.item["pre"].append(data)
+        elif self.entries:
+            self.entries[-1]["h" if self.heading else "t"].append(data)
+
+
+def search_index(parsed) -> list:
+    """Every page's headings and text. The home page repeats a lot from the other pages, so those repeats link to the other pages only."""
+    entries = []
+    order = ["index", *PAGE_SLUGS]  # visitors' pages first, so an equal match lists Ministries before Events
+    for slug, meta, body in sorted((p for p in parsed if p[0] in order), key=lambda p: order.index(p[0])):
+        page = PageText()
+        page.feed(render_static(hero_for(meta) + body, ""))
+        for e in page.entries:
+            h, t = (" ".join("".join(e[k]).split()) for k in ("h", "t"))
+            if h:
+                entries.append({"p": "Home" if slug == "index" else html.unescape(meta.get("menu", meta["title"])),
+                                "s": "home" if slug == "index" else slug, "a": e["a"], "h": h, "t": t})
+    elsewhere = {e["h"] for e in entries if e["s"] != "home"}
+    return [e for e in entries if e["s"] != "home" or e["h"] not in elsewhere]
+
+
 def static_logo() -> str:
     """Drop the church's logo at assets/img/logo.png (or .svg) and the header and footer use it."""
     for name in ("logo.svg", "logo.png"):
@@ -250,6 +327,8 @@ def render_static(text: str, nav: str) -> str:
     text = re.sub(r"\{\{video:([\w-]+)(:eager)?\}\}", lambda m: video_tag(m.group(1), bool(m.group(2))), text)
     text = re.sub(r"\{\{cur:([\w-]+)\}\}", lambda m: "is-current" if m.group(1) == nav else "", text)
     text = text.replace("{{preview_pill}}", PREVIEW_PILL).replace("{{logo}}", static_logo())
+    pages = {s: "index.html" if s == "home" else f"{s}.html" for s in ["home", *PAGE_SLUGS]}
+    text = text.replace("{{search_attrs}}", f'data-search-pages="{html.escape(json.dumps(pages))}"')
     return common(text)
 
 
@@ -263,6 +342,7 @@ def render_wp(text: str) -> str:
                   lambda m: f"<?php occ_video( '{m.group(1)}', {'true' if m.group(2) else 'false'} ); ?>", text)
     text = re.sub(r"\{\{cur:([\w-]+)\}\}", lambda m: f"<?php occ_current( '{m.group(1)}' ); ?>", text)
     text = text.replace("{{logo}}", "<?php occ_logo(); ?>")
+    text = text.replace("{{search_attrs}}", 'data-search-pages="<?php echo esc_attr( wp_json_encode( occ_search_pages() ) ); ?>" data-native')
     text = text.replace("{{preview_pill}}", "<?php if ( get_theme_mod( 'occ_preview_badge', true ) ) : ?>" + PREVIEW_PILL + "<?php endif; ?>")
     return common(text)
 
@@ -383,6 +463,9 @@ def main():
     parsed = [(p.stem, *parse(p)) for p in sorted((SRC / "pages").glob("*.html"))]
     build_static(parsed, header, footer)
     build_wp(parsed, header, footer)
+    index = json.dumps(search_index(parsed), ensure_ascii=False, separators=(",", ":"))
+    for folder in (SITE, THEME):
+        (folder / "assets" / "search-index.json").write_text(index)
     print(f"built {len(parsed)} pages -> docs/ and wordpress/one-christian-church/")
 
 

@@ -13,7 +13,14 @@ get_header();
   <div class="tint tint-dark"></div>
   <div class="wrap hero-copy">
     <p class="kicker"><?php bloginfo( 'name' ); ?></p>
-    <h1><?php echo esc_html( is_home() ? __( 'News', 'one-christian-church' ) : wp_strip_all_tags( get_the_archive_title() ) ); ?></h1>
+    <h1><?php
+    if ( is_search() ) {
+      /* translators: %s: what the visitor searched for */
+      echo esc_html( sprintf( __( 'Search: %s', 'one-christian-church' ), get_search_query( false ) ) );
+    } else {
+      echo esc_html( is_home() ? __( 'News', 'one-christian-church' ) : wp_strip_all_tags( get_the_archive_title() ) );
+    }
+    ?></h1>
   </div>
 </section>
 <section class="section">

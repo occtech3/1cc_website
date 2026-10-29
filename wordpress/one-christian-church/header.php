@@ -32,8 +32,31 @@
         <li><a class="nav-link <?php occ_current( 'give' ); ?>" href="<?php echo esc_url( occ_url( 'give', '' ) ); ?>">Give</a></li>
         <li><a class="nav-link <?php occ_current( 'contact' ); ?>" href="<?php echo esc_url( occ_url( 'contact', '' ) ); ?>">Contact</a></li>
       </ul>
+      <button class="nav-search" type="button" aria-label="Search the site" data-search-open><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
       <a class="btn btn-sun nav-cta" href="<?php echo esc_url( occ_url( 'new-here', '' ) ); ?>">Plan a Visit</a>
     </nav>
+    <button class="nav-search nav-search-mobile" type="button" aria-label="Search the site" data-search-open><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="primary-nav" aria-expanded="false" data-menu-toggle><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </header>
+<dialog class="search-dialog" aria-label="Search the site" data-search data-search-index="<?php echo esc_url( get_theme_file_uri( 'assets/search-index.json' ) ); ?>" data-search-pages="<?php echo esc_attr( wp_json_encode( occ_search_pages() ) ); ?>" data-native>
+  <div class="search-panel">
+    <form class="search-form" role="search" action="<?php echo esc_url( occ_url( 'home', '' ) ); ?>" method="get">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      <label class="sr-only" for="site-search">Search the site</label>
+      <input id="site-search" type="search" name="s" placeholder="Search services, groups, events&hellip;" autocomplete="off" spellcheck="false">
+      <button class="search-close" type="button" data-search-close aria-label="Close search">Esc</button>
+    </form>
+    <div class="search-quick" data-search-quick>
+      <p>Popular</p>
+      <a href="<?php echo esc_url( occ_url( 'new-here', '' ) ); ?>">Plan a visit</a>
+      <a href="<?php echo esc_url( occ_url( 'events', '' ) ); ?>">This week</a>
+      <a href="<?php echo esc_url( occ_url( 'ministries', 'young-adults' ) ); ?>">Young Adults</a>
+      <a href="<?php echo esc_url( occ_url( 'ministries', 'kids' ) ); ?>">Kids</a>
+      <a href="<?php echo esc_url( occ_url( 'listen', '' ) ); ?>">Sermons</a>
+      <a href="<?php echo esc_url( occ_url( 'give', '' ) ); ?>">Give</a>
+    </div>
+    <p class="search-status" data-search-status aria-live="polite"></p>
+    <ol class="search-results" data-search-results></ol>
+  </div>
+</dialog>

@@ -39,6 +39,90 @@ if (toggle) {
   document.querySelectorAll(".primary-nav a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
 }
 
+/* Site search: every page's headings and text (indexed by build.py), fetched the first time search opens.
+   Enter goes to the top result; in WordPress, Enter with no match falls through to the normal site search. */
+const search = document.querySelector("[data-search]");
+if (search && typeof search.showModal === "function") {
+  const form = search.querySelector("form");
+  const input = search.querySelector("input");
+  const quick = search.querySelector("[data-search-quick]");
+  const status = search.querySelector("[data-search-status]");
+  const list = search.querySelector("[data-search-results]");
+  const pages = JSON.parse(search.dataset.searchPages || "{}");
+  const native = "native" in search.dataset;
+  let entries = null;
+  let loading = null;
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fold = (s) => s.toLowerCase().replace(/[‘’]/g, "'");
+  const load = () => loading || (loading = fetch(search.dataset.searchIndex)
+    .then((r) => r.json())
+    .catch(() => [])
+    .then((data) => { entries = data.map((e) => ({ ...e, fh: fold(e.h), fp: fold(e.p), ft: fold(e.t) })); render(); }));
+  const find = (terms) => entries.map((e) => {
+    let score = 0;
+    for (const w of terms) {
+      const s = (e.fh.includes(w) ? 6 : 0) + (e.fp.includes(w) ? 2 : 0) + (e.ft.includes(w) ? 1 : 0);
+      if (!s) return null;
+      score += s + (e.fh.startsWith(w) ? 2 : 0);
+    }
+    return { e, score };
+  }).filter(Boolean).sort((a, b) => b.score - a.score).map((r) => r.e);
+  const highlight = (s, re) => s.split(re).map((part, i) => (i % 2 ? `<mark>${esc(part)}</mark>` : esc(part))).join("");
+  const snippet = (e, terms) => {
+    const hits = terms.map((w) => e.ft.indexOf(w)).filter((n) => n >= 0);
+    const start = hits.length ? Math.max(0, Math.min(...hits) - 50) : 0;
+    return (start ? "…" : "") + e.t.slice(start, start + 150) + (start + 150 < e.t.length ? "…" : "");
+  };
+  const render = () => {
+    const q = input.value.trim();
+    quick.hidden = Boolean(q);
+    list.innerHTML = "";
+    if (!q) { status.textContent = ""; return; }
+    if (!entries) { status.textContent = "Searching…"; return; }
+    const terms = [...new Set(fold(q).split(/\s+/))];
+    const found = find(terms);
+    const re = new RegExp(`(${terms.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "i");
+    status.textContent = found.length
+      ? `${found.length} result${found.length === 1 ? "" : "s"}`
+      : `No matches for “${q}”.${native ? " Press Enter to search the whole site." : " Try “Sunday”, “kids” or “youth”."}`;
+    list.innerHTML = found.slice(0, 8).map((e) => `<li><a href="${esc((pages[e.s] || "") + (e.a ? `#${e.a}` : ""))}">`
+      + `<span class="sr-page">${esc(e.p)}</span><span class="sr-title">${highlight(e.h, re)}</span>`
+      + (e.t ? `<span class="sr-snip">${highlight(snippet(e, terms), re)}</span>` : "") + "</a></li>").join("");
+  };
+  const open = () => {
+    if (search.open) return;
+    search.showModal();
+    body.style.overflow = "hidden";
+    input.select();
+    load();
+    render();
+  };
+  document.querySelectorAll("[data-search-open]").forEach((b) => b.addEventListener("click", open));
+  document.addEventListener("keydown", (e) => {
+    const typing = e.target.closest && e.target.closest("input, textarea, select, [contenteditable]");
+    if ((e.key === "/" && !typing) || (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey))) { e.preventDefault(); open(); }
+  });
+  search.addEventListener("close", () => { body.style.overflow = ""; });
+  search.addEventListener("click", (e) => {
+    if (e.target === search || e.target.closest("[data-search-close], a")) search.close();
+  });
+  input.addEventListener("input", render);
+  form.addEventListener("submit", (e) => {
+    const first = list.querySelector("a");
+    if (first) { e.preventDefault(); search.close(); window.location.href = first.href; }
+    else if (!native || !input.value.trim()) e.preventDefault();
+  });
+  search.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); search.close(); return; }  // a search field would only clear itself
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    const links = [...search.querySelectorAll(".search-results a, .search-quick a")].filter((a) => a.offsetParent);
+    if (!links.length) return;
+    e.preventDefault();
+    const i = links.indexOf(document.activeElement) + (e.key === "ArrowDown" ? 1 : -1);
+    (i < 0 ? input : links[Math.min(i, links.length - 1)]).focus();
+  });
+}
+
 /* Background videos: load when near the viewport, play only while visible, fade in once frames arrive.
    Story videos are driven by the story controller below. */
 let videosPaused = reduceMotion || store.get("occ-video-paused") === "1";

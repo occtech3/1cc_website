@@ -16,8 +16,31 @@
         <li><a class="nav-link {{cur:give}}" href="{{url:give}}">Give</a></li>
         <li><a class="nav-link {{cur:contact}}" href="{{url:contact}}">Contact</a></li>
       </ul>
+      <button class="nav-search" type="button" aria-label="Search the site" data-search-open>{{icon:search}}</button>
       <a class="btn btn-sun nav-cta" href="{{url:new-here}}">Plan a Visit</a>
     </nav>
+    <button class="nav-search nav-search-mobile" type="button" aria-label="Search the site" data-search-open>{{icon:search}}</button>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="primary-nav" aria-expanded="false" data-menu-toggle>{{icon:menu}}</button>
   </div>
 </header>
+<dialog class="search-dialog" aria-label="Search the site" data-search data-search-index="{{asset:search-index.json}}" {{search_attrs}}>
+  <div class="search-panel">
+    <form class="search-form" role="search" action="{{url:home}}" method="get">
+      {{icon:search}}
+      <label class="sr-only" for="site-search">Search the site</label>
+      <input id="site-search" type="search" name="s" placeholder="Search services, groups, events&hellip;" autocomplete="off" spellcheck="false">
+      <button class="search-close" type="button" data-search-close aria-label="Close search">Esc</button>
+    </form>
+    <div class="search-quick" data-search-quick>
+      <p>Popular</p>
+      <a href="{{url:new-here}}">Plan a visit</a>
+      <a href="{{url:events}}">This week</a>
+      <a href="{{url:ministries#young-adults}}">Young Adults</a>
+      <a href="{{url:ministries#kids}}">Kids</a>
+      <a href="{{url:listen}}">Sermons</a>
+      <a href="{{url:give}}">Give</a>
+    </div>
+    <p class="search-status" data-search-status aria-live="polite"></p>
+    <ol class="search-results" data-search-results></ol>
+  </div>
+</dialog>

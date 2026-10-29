@@ -71,6 +71,19 @@ function occ_url( $slug, $anchor = '' ) {
 }
 
 /**
+ * Links for the header search, slug => URL. The search index (assets/search-index.json) names pages by slug.
+ *
+ * @return array
+ */
+function occ_search_pages() {
+	$pages = array( 'home' => occ_url( 'home' ) );
+	foreach ( occ_data()['pages'] as $page ) {
+		$pages[ $page['slug'] ] = occ_url( $page['slug'] );
+	}
+	return $pages;
+}
+
+/**
  * Print the nav "current" class for a page slug.
  *
  * @param string $slug Page slug.

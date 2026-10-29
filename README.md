@@ -51,9 +51,15 @@ The animated 3D logo (home and page heroes, the "Come as you are" band, and the 
 dark section) is built from the same file: `build.py` stacks copies of it in CSS 3D, with a moving colour gradient
 on the front. It leans toward the mouse, pauses off screen, and holds still for visitors who prefer reduced motion.
 
+## Search
+
+The magnifying glass in the header (or `/`, or Ctrl+K) opens a search over every page. `build.py` indexes each
+page's headings and text into `assets/search-index.json`, so results update whenever the site is rebuilt. In
+WordPress, pressing Enter when nothing matches falls through to the normal WordPress search, which also finds posts.
+
 ## Open items for the church
 
-- Staff photos and bios (leaders show initials for now).
+- Leader bios (the photos of Jerry, Dena, and Devon & Jordyn are in `assets/img/leaders/`).
 - House Church details; next GriefShare start date.
 - Their own video footage to replace the placeholders.
 - Real forms (WPForms, Fluent Forms or Gravity Forms) and an events calendar plugin.

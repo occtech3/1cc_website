@@ -33,17 +33,40 @@
         <li><a class="nav-link " href="give.html">Give</a></li>
         <li><a class="nav-link is-current" href="contact.html">Contact</a></li>
       </ul>
+      <button class="nav-search" type="button" aria-label="Search the site" data-search-open><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
       <a class="btn btn-sun nav-cta" href="new-here.html">Plan a Visit</a>
     </nav>
+    <button class="nav-search nav-search-mobile" type="button" aria-label="Search the site" data-search-open><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="primary-nav" aria-expanded="false" data-menu-toggle><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </header>
+<dialog class="search-dialog" aria-label="Search the site" data-search data-search-index="assets/search-index.json" data-search-pages="{&quot;home&quot;: &quot;index.html&quot;, &quot;new-here&quot;: &quot;new-here.html&quot;, &quot;about&quot;: &quot;about.html&quot;, &quot;ministries&quot;: &quot;ministries.html&quot;, &quot;events&quot;: &quot;events.html&quot;, &quot;listen&quot;: &quot;listen.html&quot;, &quot;give&quot;: &quot;give.html&quot;, &quot;contact&quot;: &quot;contact.html&quot;}">
+  <div class="search-panel">
+    <form class="search-form" role="search" action="index.html" method="get">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      <label class="sr-only" for="site-search">Search the site</label>
+      <input id="site-search" type="search" name="s" placeholder="Search services, groups, events&hellip;" autocomplete="off" spellcheck="false">
+      <button class="search-close" type="button" data-search-close aria-label="Close search">Esc</button>
+    </form>
+    <div class="search-quick" data-search-quick>
+      <p>Popular</p>
+      <a href="new-here.html">Plan a visit</a>
+      <a href="events.html">This week</a>
+      <a href="ministries.html#young-adults">Young Adults</a>
+      <a href="ministries.html#kids">Kids</a>
+      <a href="listen.html">Sermons</a>
+      <a href="give.html">Give</a>
+    </div>
+    <p class="search-status" data-search-status aria-live="polite"></p>
+    <ol class="search-results" data-search-results></ol>
+  </div>
+</dialog>
 
 <main id="main">
 <section class="hero hero-page">
   <div class="media"><div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div><video class="bg-video" data-slot="adults" muted loop playsinline preload="auto" data-loaded="1" aria-hidden="true"><source src="assets/video/adults.mp4" type="video/mp4"></video></div>
   <div class="tint tint-color"></div><div class="tint tint-dark"></div>
-  <div class="hero-logo"><div class="logo3d logo3d-page" aria-hidden="true" data-tilt><span class="l3-glow"></span><div class="l3-tilt"><div class="l3-spin"><svg class="l3 l3-back" viewBox="34 11.5 174 174" style="--i:9"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:8;--c:#150D36"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:7;--c:#291764"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:6;--c:#3D2091"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:5;--c:#512ABF"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:4;--c:#6933DC"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:3;--c:#863BE8"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:2;--c:#A343F3"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:1;--c:#C04BFF"><use href="#occ-logo"/></svg><svg class="l3 l3-front" viewBox="34 11.5 174 174" style="--i:0"><use href="#occ-logo"/></svg><svg class="l3 l3-sheen" viewBox="34 11.5 174 174" style="--i:-0.3"><use href="#occ-logo"/></svg></div></div></div></div>
+  <div class="hero-logo"><div class="logo3d logo3d-page" aria-hidden="true" data-tilt><span class="l3-glow"></span><div class="l3-tilt"><div class="l3-spin"><svg class="l3 l3-back" viewBox="0 0 174 174" style="--i:9"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:8;--c:#150D36"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:7;--c:#291764"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:6;--c:#3D2091"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:5;--c:#512ABF"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:4;--c:#6933DC"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:3;--c:#863BE8"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:2;--c:#A343F3"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:1;--c:#C04BFF"><use href="#occ-logo"/></svg><svg class="l3 l3-front" viewBox="0 0 174 174" style="--i:0"><use href="#occ-logo"/></svg><svg class="l3 l3-sheen" viewBox="0 0 174 174" style="--i:-0.3"><use href="#occ-logo"/></svg></div></div></div></div>
   <div class="wrap hero-copy">
     <p class="kicker">Contact</p>
     <h1>We'd love to <span class="grad-text">hear from you.</span></h1>
@@ -83,7 +106,7 @@
 </div></div>
 <section class="cta-band">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-  <div class="cta-logo"><div class="logo3d logo3d-cta" aria-hidden="true"><span class="l3-glow"></span><div class="l3-tilt"><div class="l3-spin"><svg class="l3 l3-back" viewBox="34 11.5 174 174" style="--i:10"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:9;--c:#150D36"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:8;--c:#26165E"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:7;--c:#381E86"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:6;--c:#4A26AE"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:5;--c:#5B2FD6"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:4;--c:#7436E0"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:3;--c:#8E3DEA"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:2;--c:#A744F5"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="34 11.5 174 174" style="--i:1;--c:#C04BFF"><use href="#occ-logo"/></svg><svg class="l3 l3-front" viewBox="34 11.5 174 174" style="--i:0"><use href="#occ-logo"/></svg><svg class="l3 l3-sheen" viewBox="34 11.5 174 174" style="--i:-0.3"><use href="#occ-logo"/></svg></div></div></div></div>
+  <div class="cta-logo"><div class="logo3d logo3d-cta" aria-hidden="true"><span class="l3-glow"></span><div class="l3-tilt"><div class="l3-spin"><svg class="l3 l3-back" viewBox="0 0 174 174" style="--i:10"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:9;--c:#150D36"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:8;--c:#26165E"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:7;--c:#381E86"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:6;--c:#4A26AE"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:5;--c:#5B2FD6"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:4;--c:#7436E0"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:3;--c:#8E3DEA"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:2;--c:#A744F5"><use href="#occ-logo"/></svg><svg class="l3 l3-side" viewBox="0 0 174 174" style="--i:1;--c:#C04BFF"><use href="#occ-logo"/></svg><svg class="l3 l3-front" viewBox="0 0 174 174" style="--i:0"><use href="#occ-logo"/></svg><svg class="l3 l3-sheen" viewBox="0 0 174 174" style="--i:-0.3"><use href="#occ-logo"/></svg></div></div></div></div>
   <div class="wrap">
     <p class="kicker">Every Sunday</p>
     <h2 class="reveal zoom">Come as<br>you are.</h2>
