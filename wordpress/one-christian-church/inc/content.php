@@ -7,11 +7,11 @@
  *     (for Home, the current front page if there is one; otherwise by slug) or creates it. An existing page keeps its
  *     title, and its current content, status, page template and Elementor setting are saved with it (_occ_previous)
  *   - fills each page with the design's blocks, or with the content it had when this theme was last active
- *   - makes Home the front page, creates the "Site footer" pattern and the two menus if they don't exist yet,
- *     and copies the leader photos into the Media Library
+ *   - makes Home the front page, creates the "Site footer" pattern and the two menus if they don't exist yet
+ *     (the old theme's menus stay with the old theme), and copies the leader photos into the Media Library
  * Switching to another theme:
  *   - keeps each page's content for next time (_occ_design_content), puts back what was saved, sets the pages
- *     the theme created to draft and restores the front page settings
+ *     the theme created to draft, restores the front page settings and leaves the next theme its own menus
  *
  * @package One_Christian_Church
  */
@@ -242,22 +242,45 @@ function occ_install() {
 	occ_install_menus();
 	kses_init();
 	delete_transient( 'occ_search_index' );
+	occ_clear_page_caches();
 	set_transient( 'occ_just_installed', 1, DAY_IN_SECONDS );
 }
 add_action( 'after_switch_theme', 'occ_install' );
 
 /**
- * Create the "Main menu" and "Search shortcuts" menus and assign them, unless the theme already has menus assigned.
+ * Empty the page caches after a theme switch, so visitors don't keep getting pages built with the other theme.
+ * Covers WP Super Cache, Jetpack Boost and WP Engine; other caches are cleared from their own settings.
+ */
+function occ_clear_page_caches() {
+	if ( function_exists( 'wp_cache_clear_cache' ) ) {
+		wp_cache_clear_cache();
+	}
+	do_action( 'jetpack_boost_clear_page_cache_all' );
+	if ( class_exists( 'WpeCommon' ) ) {
+		foreach ( array( 'purge_memcached', 'purge_varnish_cache' ) as $purge ) {
+			if ( method_exists( 'WpeCommon', $purge ) ) {
+				call_user_func( array( 'WpeCommon', $purge ) );
+			}
+		}
+	}
+}
+
+/**
+ * Give the theme its own menus: the ones it had when it was last switched away, else the "Main menu" and "Search
+ * shortcuts" it created before, else new ones. WordPress hands the previous theme's menus to menu areas with the same
+ * name (Inspiro's "primary" too), which would put the old site's menu in this header, so those are not kept.
  */
 function occ_install_menus() {
-	$locations = get_theme_mod( 'nav_menu_locations', array() );
+	$locations = array();
 	$names     = array(
 		'primary' => __( 'Main menu', 'one-christian-church' ),
 		'search'  => __( 'Search shortcuts', 'one-christian-church' ),
 	);
+	$saved     = (array) get_option( 'occ_menu_locations', array() );
 	$made      = (array) get_option( 'occ_menus', array() );
 	foreach ( $names as $location => $name ) {
-		if ( ! empty( $locations[ $location ] ) && wp_get_nav_menu_object( $locations[ $location ] ) ) {
+		if ( ! empty( $saved[ $location ] ) && wp_get_nav_menu_object( $saved[ $location ] ) ) {
+			$locations[ $location ] = $saved[ $location ];
 			continue;
 		}
 		if ( ! empty( $made[ $location ] ) && wp_get_nav_menu_object( $made[ $location ] ) ) {
@@ -336,7 +359,21 @@ function occ_uninstall() {
 		update_option( 'page_for_posts', $front['page_for_posts'] );
 		delete_option( 'occ_previous_front' );
 	}
+
+	// Keep this theme's menu assignments for next time. WordPress would otherwise hand them to the next theme's menu
+	// areas, pointing its header at pages that are now drafts; that theme keeps its own menus instead.
+	$ours = get_option( 'theme_switch_menu_locations' );
+	if ( is_array( $ours ) ) {
+		update_option( 'occ_menu_locations', $ours, false );
+	}
+	delete_option( 'theme_switch_menu_locations' );
+	$made = array_map( 'intval', (array) get_option( 'occ_menus', array() ) );
+	$next = get_theme_mod( 'nav_menu_locations' ); // the new theme's: a theme activated for the first time is given ours
+	if ( is_array( $next ) && $made ) {
+		set_theme_mod( 'nav_menu_locations', array_diff( array_map( 'intval', $next ), $made ) );
+	}
 	kses_init();
+	occ_clear_page_caches();
 }
 add_action( 'switch_theme', 'occ_uninstall' );
 

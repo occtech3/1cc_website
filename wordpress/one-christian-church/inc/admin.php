@@ -135,7 +135,7 @@ function occ_guide_page() {
 		</tbody></table>
 
 		<h2><?php esc_html_e( 'Switching themes', 'one-christian-church' ); ?></h2>
-		<p><?php esc_html_e( 'Switching to another theme puts back the pages, Elementor settings and front page the site had before this theme was activated, and keeps this theme\'s versions for next time. Pages this theme created are set to draft.', 'one-christian-church' ); ?></p>
+		<p><?php esc_html_e( 'Switching to another theme puts back the pages, Elementor settings, menus and front page the site had before this theme was activated, and keeps this theme\'s versions for next time. Pages this theme created are set to draft.', 'one-christian-church' ); ?></p>
 	</div>
 	<?php
 }

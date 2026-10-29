@@ -77,6 +77,19 @@ add_filter(
 	2
 );
 
+// Elementor puts an "Edit with Elementor" button in the block editor. On the design pages it would open the page's old
+// Elementor version and replace the design when saved, so the button is left off there.
+add_action(
+	'enqueue_block_editor_assets',
+	function () {
+		$id = (int) get_the_ID();
+		if ( $id && ( get_post_meta( $id, '_occ_key', true ) || occ_footer_block_id() === $id ) ) {
+			wp_dequeue_script( 'elementor-gutenberg' );
+		}
+	},
+	100
+);
+
 add_action(
 	'wp_enqueue_scripts',
 	function () {

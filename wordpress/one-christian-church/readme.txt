@@ -56,12 +56,14 @@ is rebuilt whenever a page or the footer is saved. Pressing Enter with no match 
 
 == Elementor ==
 
-If Elementor stays active, leave these pages in the block editor. With Elementor Pro, a Theme Builder
-header or footer set to show on the entire site replaces this theme's header and footer: set those
-templates to draft (the Site guide warns when it finds one).
+If Elementor stays active, leave these pages in the block editor. The theme hides Elementor's
+"Edit with Elementor" button on them, because it would bring back the page's old Elementor version.
+With Elementor Pro, a Theme Builder header or footer set to show on the entire site replaces this
+theme's header and footer: set those templates to draft (the Site guide warns when it finds one).
 
 == Switching back ==
 
 Activating another theme puts back each page's previous content, template and Elementor setting, and the
-previous front page. Pages this theme created are set to draft. The theme's versions of the pages are kept,
-so activating it again restores the edits made with it.
+previous front page. Pages this theme created are set to draft. Each theme keeps its own menus. The theme's
+versions of the pages are kept, so activating it again restores the edits made with it. Switching either way
+empties the WP Super Cache, Jetpack Boost and WP Engine page caches; clear any other cache by hand.

@@ -138,7 +138,12 @@ function occ_handle_form() {
 		$done( array( 'occ_error' => $type, 'occ_reason' => 'fields' ) );
 	}
 
-	$visitor = 'occ_form_' . md5( ( $_SERVER['REMOTE_ADDR'] ?? '' ) . wp_salt() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- only hashed.
+	// Behind a proxy or CDN every visitor can arrive from the same address, so the visitor's own address, as the proxy
+	// passes it on, is counted too.
+	// phpcs:disable WordPress.Security.ValidatedSanitizedInput -- only hashed.
+	$forwarded = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? strtok( (string) ( $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '' ), ',' );
+	$visitor   = 'occ_form_' . md5( ( $_SERVER['REMOTE_ADDR'] ?? '' ) . '|' . trim( (string) $forwarded ) . wp_salt() );
+	// phpcs:enable
 	$count   = (int) get_transient( $visitor );
 	if ( $count >= 5 ) {
 		$done( array( 'occ_error' => $type, 'occ_reason' => 'busy' ) );

@@ -56,9 +56,12 @@ if (search && typeof search.showModal === "function") {
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const fold = (s) => s.toLowerCase().replace(/[‘’]/g, "'");
   const load = () => loading || (loading = fetch(search.dataset.searchIndex)
-    .then((r) => r.json())
+    .then((r) => (r.ok ? r.json() : []))
     .catch(() => [])
-    .then((data) => { entries = data.map((e) => ({ ...e, fh: fold(e.h), fp: fold(e.p), ft: fold(e.t) })); render(); }));
+    .then((data) => {
+      entries = (Array.isArray(data) ? data : []).map((e) => ({ ...e, fh: fold(e.h || ""), fp: fold(e.p || ""), ft: fold(e.t || "") }));
+      render();
+    }));
   const find = (terms) => entries.map((e) => {
     let score = 0;
     for (const w of terms) {
