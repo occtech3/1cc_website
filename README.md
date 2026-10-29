@@ -7,9 +7,11 @@ video ministry cards, marquees, wave dividers and big condensed type.
 One set of sources builds two deliverables:
 
 - `docs/`: static preview pages (open `docs/index.html`). GitHub Pages publishes this folder.
-- `wordpress/one-christian-church/`: an installable classic WordPress theme. Activating it creates the
-  pages (Home, Plan a Visit, About, Ministries, Events, Watch & Listen, Give, Contact) and sets Home as
-  the front page. Each page renders from its `page-{slug}.php` template.
+- `wordpress/one-christian-church/`: an installable classic WordPress theme. Activating it writes the design into
+  the pages (Home, Plan a Visit, About, Ministries, Events, Watch & Listen, Give, Contact) as ordinary block-editor
+  content, so staff edit the text, photos and FAQs in WordPress. It also sets up the menus, the footer pattern,
+  the forms and the search. Switching to another theme puts the site's previous pages back. Details for the
+  people who run the site are in the theme's `readme.txt` and, once installed, Appearance > Site guide.
 
 ## Edit and rebuild
 
@@ -19,8 +21,29 @@ Page sources are in `src/pages/`, the shared header and footer in `src/parts/`. 
 ./package.sh      # runs build.py, then zips both deliverables into dist/
 ```
 
-Do not edit the generated `docs/*.html` or `wordpress/one-christian-church/page-*.php`, `front-page.php`,
-`header.php`, `footer.php`, `404.php`; they are overwritten by `build.py`.
+Do not edit the generated `docs/*.html`, or in the theme `header.php`, `footer.php`, `404.php`, `inc/content/`,
+`inc/forms/`, `inc/theme-data.json` and `inc/fragments.json`; `build.py` overwrites them.
+
+## How the pages become WordPress blocks
+
+`blocks.py` turns each page source into two things from one normalised copy: the static HTML in `docs/` and the
+block markup the theme writes into the WordPress page (`inc/content/<page>.html`). Paragraphs, headings, lists,
+quotes, FAQs (`<details>`) and photos become their own blocks; sections and cards become Group blocks that keep
+their CSS classes. Decorative parts (SVG art, video frames, marquees) become Custom HTML blocks, which the editor
+labels "Design element". Placeholders in the sources (`{{icon:x}}`, `{{video:slot}}`, `{{form:contact}}`,
+`{{wave}}`, `{{map}}`...) become `[occ_...]` shortcodes in WordPress, so the markup they print stays in the theme.
+`build.py` stops with an error if a source uses markup the converter cannot map, rather than producing blocks the
+editor would mark as invalid.
+
+The theme side lives in `wordpress/one-christian-church/inc/`: `content.php` (install, switch back, reset a page),
+`site-parts.php` (menu, header settings, footer pattern), `forms.php`, `search.php`, `shortcodes.php` and
+`admin.php` (the Site guide screen).
+
+## Forms
+
+The Contact and Plan a Visit forms are defined in `FORMS` in `build.py`. On the static preview they are
+demonstrations. In WordPress they email the address in Customize > Forms, keep a copy under Messages, and have
+spam protection (hidden field, minimum time, rate limit).
 
 ## Videos
 
@@ -53,16 +76,17 @@ on the front. It leans toward the mouse, pauses off screen, and holds still for 
 
 ## Search
 
-The magnifying glass in the header (or `/`, or Ctrl+K) opens a search over every page. `build.py` indexes each
-page's headings and text into `assets/search-index.json`, so results update whenever the site is rebuilt. In
-WordPress, pressing Enter when nothing matches falls through to the normal WordPress search, which also finds posts.
+The magnifying glass in the header (or `/`, or Ctrl+K) opens a search over every page. For the static preview
+`build.py` indexes each page's headings and text into `docs/assets/search-index.json`. In WordPress the theme
+builds the same index from the published pages (`/wp-json/occ/v1/search-index`) and rebuilds it whenever a page
+is saved. Pressing Enter when nothing matches falls through to the normal WordPress search, which also finds posts.
 
 ## Open items for the church
 
 - Leader bios (the photos of Jerry, Dena, and Devon & Jordyn are in `assets/img/leaders/`).
 - House Church details; next GriefShare start date.
 - Their own video footage to replace the placeholders.
-- Real forms (WPForms, Fluent Forms or Gravity Forms) and an events calendar plugin.
+- An events calendar plugin, if they want one.
 
 ## Brand
 

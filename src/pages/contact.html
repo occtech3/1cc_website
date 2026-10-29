@@ -8,26 +8,19 @@ nav: contact
 description: Contact One Christian Church in Greenwood, Indiana. Call 317-787-8236 or email onecc.office@gmail.com.
 ---
 <section class="section">
-  <div class="wrap split" style="align-items:start">
+  <div class="wrap split align-start">
     <div class="reveal from-left">
-      <ul class="contact-list">
-        <li>{{icon:pin}}<div><h3>Visit</h3><p>2578 Lawrence Dr.<br>Greenwood, IN 46143</p></div></li>
-        <li>{{icon:phone}}<div><h3>Call</h3><p><a href="tel:+13177878236">317-787-8236</a></p></div></li>
-        <li>{{icon:mail}}<div><h3>Email</h3><p><a href="mailto:onecc.office@gmail.com">onecc.office@gmail.com</a></p></div></li>
-        <li>{{icon:calendar}}<div><h3>Office hours</h3><p>Monday &ndash; Friday, 9am &ndash; 5pm</p></div></li>
-      </ul>
-      <div class="map-frame" style="aspect-ratio:16/10"><iframe title="Map to One Christian Church" loading="lazy" src="https://www.google.com/maps?q=2578+Lawrence+Dr,+Greenwood,+IN+46143&amp;output=embed"></iframe></div>
-    </div>
-    <form class="form-card reveal from-right" data-mock-form>
-      <h3>Send us a message</h3>
-      <div class="form-row">
-        <div class="field"><label for="c-name">Name</label><input id="c-name" required></div>
-        <div class="field"><label for="c-email">Email</label><input id="c-email" type="email" required></div>
+      <div class="contact-list">
+        <div class="contact-item">{{icon:pin}}<div><h3>Visit</h3><p>2578 Lawrence Dr.<br>Greenwood, IN 46143</p></div></div>
+        <div class="contact-item">{{icon:phone}}<div><h3>Call</h3><p><a href="tel:+13177878236">317-787-8236</a></p></div></div>
+        <div class="contact-item">{{icon:mail}}<div><h3>Email</h3><p><a href="mailto:onecc.office@gmail.com">onecc.office@gmail.com</a></p></div></div>
+        <div class="contact-item">{{icon:calendar}}<div><h3>Office hours</h3><p>Monday &ndash; Friday, 9am &ndash; 5pm</p></div></div>
       </div>
-      <div class="field"><label for="c-topic">I'd like to&hellip;</label><select id="c-topic"><option>Plan a visit</option><option>Ask a question</option><option>Share a prayer request</option><option>Get connected to a ministry</option><option>Something else</option></select></div>
-      <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" rows="5"></textarea></div>
-      <button class="btn btn-sun" type="submit">Send message {{icon:arrow}}</button>
-      <p class="form-ok" hidden>Thanks! This is a preview, so nothing was sent.</p>
-    </form>
+      <div class="map-frame ratio-16-10">{{map}}</div>
+    </div>
+    <div class="form-card reveal from-right">
+      <h3>Send us a message</h3>
+      {{form:contact}}
+    </div>
   </div>
 </section>

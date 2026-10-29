@@ -1,29 +1,22 @@
 {{logo_defs}}
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="promo-strip">New here? We saved you a seat this Sunday at 10:00. <a href="{{url:new-here}}">Plan your visit &rarr;</a></div>
+{{promo_strip}}
 <header class="site-header" data-header>
   <div class="wrap header-row">
-    <a class="brand" href="{{url:home}}" aria-label="One Christian Church home">
+    <a class="brand" href="{{url:home}}" aria-label="{{site_name}} home">
       {{logo}}
-      <span class="brand-text"><span class="brand-name">One Christian</span><span class="brand-sub">Church &middot; Greenwood</span></span>
+      {{brand_text}}
     </a>
     <nav class="primary-nav" id="primary-nav" aria-label="Main">
-      <ul class="nav-list">
-        <li><a class="nav-link {{cur:about}}" href="{{url:about}}">About</a></li>
-        <li><a class="nav-link {{cur:ministries}}" href="{{url:ministries}}">Ministries</a></li>
-        <li><a class="nav-link {{cur:events}}" href="{{url:events}}">Events</a></li>
-        <li><a class="nav-link {{cur:listen}}" href="{{url:listen}}">Watch &amp; Listen</a></li>
-        <li><a class="nav-link {{cur:give}}" href="{{url:give}}">Give</a></li>
-        <li><a class="nav-link {{cur:contact}}" href="{{url:contact}}">Contact</a></li>
-      </ul>
+      {{nav}}
       <button class="nav-search" type="button" aria-label="Search the site" data-search-open>{{icon:search}}</button>
-      <a class="btn btn-sun nav-cta" href="{{url:new-here}}">Plan a Visit</a>
+      {{header_cta}}
     </nav>
     <button class="nav-search nav-search-mobile" type="button" aria-label="Search the site" data-search-open>{{icon:search}}</button>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="primary-nav" aria-expanded="false" data-menu-toggle>{{icon:menu}}</button>
   </div>
 </header>
-<dialog class="search-dialog" aria-label="Search the site" data-search data-search-index="{{asset:search-index.json}}" {{search_attrs}}>
+<dialog class="search-dialog" aria-label="Search the site" data-search data-search-index="{{search_index}}" {{search_attrs}}>
   <div class="search-panel">
     <form class="search-form" role="search" action="{{url:home}}" method="get">
       {{icon:search}}
@@ -33,12 +26,7 @@
     </form>
     <div class="search-quick" data-search-quick>
       <p>Popular</p>
-      <a href="{{url:new-here}}">Plan a visit</a>
-      <a href="{{url:events}}">This week</a>
-      <a href="{{url:ministries#young-adults}}">Young Adults</a>
-      <a href="{{url:ministries#kids}}">Kids</a>
-      <a href="{{url:listen}}">Sermons</a>
-      <a href="{{url:give}}">Give</a>
+      {{search_quick}}
     </div>
     <p class="search-status" data-search-status aria-live="polite"></p>
     <ol class="search-results" data-search-results></ol>

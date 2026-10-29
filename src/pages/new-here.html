@@ -9,18 +9,18 @@ description: Plan your first visit to One Christian Church in Greenwood, Indiana
 ---
 <section class="section">
   <div class="wrap visit-grid">
-    <a class="big-card reveal" style="--bg:var(--grad-electric)" href="#expect">{{icon:clock}}<h3>When</h3><p>Sunday Morning Fellowship at 9:00am.<br>Worship service at 10:00am.</p></a>
-    <a class="big-card reveal" style="--bg:var(--grad-sun);--fg:var(--night)" href="https://maps.google.com/?q=2578+Lawrence+Dr,+Greenwood,+IN+46143" target="_blank" rel="noopener">{{icon:pin}}<h3>Where</h3><p>2578 Lawrence Dr.<br>Greenwood, IN 46143</p><span class="text-link" style="color:var(--night)">Get directions {{icon:arrow}}</span></a>
-    <a class="big-card reveal" style="--bg:var(--grad-ocean);--fg:var(--night)" href="#plan">{{icon:gift}}<h3>First time?</h3><p>Stop by the Welcome Center across from the main entrance. We have a gift bag for you.</p></a>
+    <a class="big-card bg-electric reveal" href="#expect">{{icon:clock}}<h3>When</h3><p>Sunday Morning Fellowship at 9:00am.<br>Worship service at 10:00am.</p></a>
+    <a class="big-card bg-sun reveal" href="https://maps.google.com/?q=2578+Lawrence+Dr,+Greenwood,+IN+46143" target="_blank" rel="noopener">{{icon:pin}}<h3>Where</h3><p>2578 Lawrence Dr.<br>Greenwood, IN 46143</p><span class="text-link">Get directions {{icon:arrow}}</span></a>
+    <a class="big-card bg-ocean reveal" href="#plan">{{icon:gift}}<h3>First time?</h3><p>Stop by the Welcome Center across from the main entrance. We have a gift bag for you.</p></a>
   </div>
 </section>
 
 <section class="section paper" id="expect">
-  <div class="wrap split" style="align-items:start">
+  <div class="wrap split align-start">
     <div class="reveal">
       <p class="kicker">What to expect</p>
       <h2>Come<br><span class="grad-electric-text">as you are.</span></h2>
-      <p style="font-size:1.1rem">We're ordinary people who love Jesus and love having guests. You don't need to know the songs, dress up or have it all together.</p>
+      <p class="text-lg">We're ordinary people who love Jesus and love having guests. You don't need to know the songs, dress up or have it all together.</p>
     </div>
     <div class="faq reveal">
       <details open><summary>What happens during the service?</summary><p>Our service starts at 10:00 with worship led by our worship team, followed by Bible-centered teaching from Pastor Jerry.</p></details>
@@ -33,21 +33,12 @@ description: Plan your first visit to One Christian Church in Greenwood, Indiana
 </section>
 
 <section class="section" id="plan">
-  <div class="wrap split" style="align-items:stretch">
-    <div class="map-frame reveal from-left"><iframe title="Map to One Christian Church" loading="lazy" src="https://www.google.com/maps?q=2578+Lawrence+Dr,+Greenwood,+IN+46143&amp;output=embed"></iframe></div>
-    <form class="form-card reveal from-right" data-mock-form>
+  <div class="wrap split align-stretch">
+    <div class="map-frame reveal from-left">{{map}}</div>
+    <div class="form-card reveal from-right">
       <h3>Let us know you're coming</h3>
       <p class="muted">We'll have someone ready to greet you and help with kids' check-in.</p>
-      <div class="form-row">
-        <div class="field"><label for="v-name">Name</label><input id="v-name" required></div>
-        <div class="field"><label for="v-email">Email</label><input id="v-email" type="email" required></div>
-      </div>
-      <div class="form-row">
-        <div class="field"><label for="v-date">Which Sunday?</label><input id="v-date" type="date"></div>
-        <div class="field"><label for="v-kids">Bringing kids?</label><select id="v-kids"><option>No</option><option>Yes, infants&ndash;K</option><option>Yes, 1st&ndash;5th grade</option><option>Yes, both</option></select></div>
-      </div>
-      <button class="btn btn-sun" type="submit">Plan my visit {{icon:arrow}}</button>
-      <p class="form-ok" hidden>Thanks! This is a preview, so nothing was sent.</p>
-    </form>
+      {{form:visit}}
+    </div>
   </div>
 </section>

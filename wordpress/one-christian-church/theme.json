@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/wp/6.5/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": false,
+		"layout": {},
+		"spacing": { "blockGap": null, "margin": false, "padding": false, "customSpacingSize": false, "defaultSpacingSizes": false },
+		"color": {
+			"custom": false,
+			"customGradient": false,
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"defaultDuotone": false,
+			"palette": [
+				{ "slug": "night", "color": "#120B2B", "name": "Night" },
+				{ "slug": "violet", "color": "#7B3FF2", "name": "Violet" },
+				{ "slug": "pink", "color": "#FF2D87", "name": "Pink" },
+				{ "slug": "orange", "color": "#FF7A1A", "name": "Orange" },
+				{ "slug": "yellow", "color": "#FFC93C", "name": "Yellow" },
+				{ "slug": "aqua", "color": "#18D1C0", "name": "Aqua" },
+				{ "slug": "cream", "color": "#FFF7EE", "name": "Cream" },
+				{ "slug": "white", "color": "#FFFFFF", "name": "White" }
+			]
+		},
+		"typography": { "customFontSize": false, "defaultFontSizes": false, "fontSizes": [], "dropCap": false, "fluid": false }
+	}
+}

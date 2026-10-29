@@ -1,6 +1,6 @@
 <?php
 /**
- * Any page without its own page-{slug}.php template: title hero plus the editor content.
+ * Pages. The theme's own pages start with the design's hero block; any other page gets a simple title header.
  *
  * @package One_Christian_Church
  */
@@ -8,7 +8,13 @@
 get_header();
 ?>
 <main id="main">
-<?php while ( have_posts() ) : the_post(); ?>
+<?php
+while ( have_posts() ) :
+	the_post();
+	if ( occ_has_hero() ) :
+		the_content();
+	else :
+		?>
 <section class="hero hero-page">
   <div class="media"><div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div></div>
   <div class="tint tint-dark"></div>
@@ -20,7 +26,10 @@ get_header();
 <section class="section">
   <div class="wrap entry-content" style="max-width:820px"><?php the_content(); ?></div>
 </section>
-<?php endwhile; ?>
+		<?php
+	endif;
+endwhile;
+?>
 </main>
 <?php
 get_footer();

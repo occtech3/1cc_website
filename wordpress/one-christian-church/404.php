@@ -1,8 +1,6 @@
 <?php
 /**
- * Page not found
- *
- * Generated from src/pages/404.html by build.py; edit the source and rebuild.
+ * Page not found. Generated from src/pages/404.html by build.py.
  *
  * @package One_Christian_Church
  */
@@ -22,7 +20,7 @@ get_header();
   
   <svg class="wave" style="--wave:var(--cream)" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46c120-26 240-38 360-24s240 52 360 52 240-40 360-50 240 6 360 26v40H0z"/></svg>
 </section>
-<section class="section"><div class="wrap center"><a class="btn btn-sun" href="<?php echo esc_url( occ_url( 'home', '' ) ); ?>">Back to home <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></section>
+<section class="section"><div class="wrap center"><p class="x-inline"><a class="btn btn-sun" href="<?php echo esc_url( occ_url( 'home', '' ) ); ?>">Back to home <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p></div></section>
 
 </main>
 <?php

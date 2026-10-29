@@ -1,33 +1,40 @@
 {
- "version": "0.3.0",
+ "version": "0.4.0",
  "pages": [
   {
    "slug": "new-here",
-   "title": "Plan a Visit"
+   "title": "Plan a Visit",
+   "menu": "Plan a Visit"
   },
   {
    "slug": "about",
-   "title": "About"
+   "title": "About",
+   "menu": "About"
   },
   {
    "slug": "ministries",
-   "title": "Ministries"
+   "title": "Ministries",
+   "menu": "Ministries"
   },
   {
    "slug": "events",
-   "title": "Events"
+   "title": "Events",
+   "menu": "Events"
   },
   {
    "slug": "listen",
-   "title": "Watch &amp; Listen"
+   "title": "Watch & Listen",
+   "menu": "Watch & Listen"
   },
   {
    "slug": "give",
-   "title": "Give"
+   "title": "Give",
+   "menu": "Give"
   },
   {
    "slug": "contact",
-   "title": "Contact"
+   "title": "Contact",
+   "menu": "Contact"
   }
  ],
  "descriptions": {
@@ -88,5 +95,164 @@
   "mic",
   "guitar"
  ],
- "fonts": "https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+ "fonts": "https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+ "menus": {
+  "primary": [
+   {
+    "title": "About",
+    "slug": "about",
+    "anchor": ""
+   },
+   {
+    "title": "Ministries",
+    "slug": "ministries",
+    "anchor": ""
+   },
+   {
+    "title": "Events",
+    "slug": "events",
+    "anchor": ""
+   },
+   {
+    "title": "Watch & Listen",
+    "slug": "listen",
+    "anchor": ""
+   },
+   {
+    "title": "Give",
+    "slug": "give",
+    "anchor": ""
+   },
+   {
+    "title": "Contact",
+    "slug": "contact",
+    "anchor": ""
+   }
+  ],
+  "search": [
+   {
+    "title": "Plan a visit",
+    "slug": "new-here",
+    "anchor": ""
+   },
+   {
+    "title": "This week",
+    "slug": "events",
+    "anchor": ""
+   },
+   {
+    "title": "Young Adults",
+    "slug": "ministries",
+    "anchor": "young-adults"
+   },
+   {
+    "title": "Kids",
+    "slug": "ministries",
+    "anchor": "kids"
+   },
+   {
+    "title": "Sermons",
+    "slug": "listen",
+    "anchor": ""
+   },
+   {
+    "title": "Give",
+    "slug": "give",
+    "anchor": ""
+   }
+  ]
+ },
+ "header": {
+  "promo_text": "New here? We saved you a seat this Sunday at 10:00.",
+  "promo_link": "Plan your visit →",
+  "promo_url": "new-here",
+  "brand_name": "One Christian",
+  "brand_sub": "Church · Greenwood",
+  "cta_label": "Plan a Visit",
+  "cta_url": "new-here"
+ },
+ "form_email": "onecc.office@gmail.com",
+ "forms": {
+  "contact": {
+   "label": "Contact form",
+   "subject": "Message from the website",
+   "sent": "Thanks! Your message is on its way to the church office.",
+   "fields": [
+    {
+     "name": "name",
+     "label": "Name",
+     "type": "text",
+     "required": true,
+     "options": []
+    },
+    {
+     "name": "email",
+     "label": "Email",
+     "type": "email",
+     "required": true,
+     "options": []
+    },
+    {
+     "name": "topic",
+     "label": "I'd like to…",
+     "type": "select",
+     "required": false,
+     "options": [
+      "Plan a visit",
+      "Ask a question",
+      "Share a prayer request",
+      "Get connected to a ministry",
+      "Something else"
+     ]
+    },
+    {
+     "name": "message",
+     "label": "Message",
+     "type": "textarea",
+     "required": true,
+     "options": []
+    }
+   ]
+  },
+  "visit": {
+   "label": "Plan a visit form",
+   "subject": "Someone is planning a visit",
+   "sent": "Thanks! We'll have someone ready to welcome you.",
+   "fields": [
+    {
+     "name": "name",
+     "label": "Name",
+     "type": "text",
+     "required": true,
+     "options": []
+    },
+    {
+     "name": "email",
+     "label": "Email",
+     "type": "email",
+     "required": true,
+     "options": []
+    },
+    {
+     "name": "date",
+     "label": "Which Sunday?",
+     "type": "date",
+     "required": false,
+     "options": []
+    },
+    {
+     "name": "kids",
+     "label": "Bringing kids?",
+     "type": "select",
+     "required": false,
+     "options": [
+      "No",
+      "Yes, infants–K",
+      "Yes, 1st–5th grade",
+      "Yes, both"
+     ]
+    }
+   ]
+  }
+ }
 }

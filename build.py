@@ -8,14 +8,21 @@ Outputs two things from the same sources:
   docs/                          static preview (open docs/index.html; GitHub Pages serves /docs)
   wordpress/one-christian-church/  classic WordPress theme (zipped to dist/ by package.sh)
 
-Placeholders used in the sources:
+Every page body and the footer go through blocks.py, so in WordPress they are ordinary block-editor content:
+the theme writes them into the pages (and a "Site footer" synced pattern) when it is activated, from
+inc/content/*.html. The static preview is built from the same normalised HTML, so both look the same.
+
+Placeholders used in the sources (in WordPress content they become [occ_…] shortcodes):
   {{url:slug}} {{url:slug#id}}   link to a page        {{asset:path}}     file under assets/
-  {{video:slot}} {{video:slot:eager}}  background video  {{icon:name}}      inline SVG icon
-  {{logo}} church logo (falls back to {{mark}})  {{mark}} {{aurora}} {{wave}} {{wave:top}}  decorations  {{cur:slug}}  current-page class in the nav
-  {{logo3d:hero|page|cta|badge}}  animated 3D logo   {{logo_defs}}  shared SVG symbol and gradients (once, in the header)
-  {{video_list}}  the clips every video spot cycles through
-  {{search_attrs}}  page links for the header search (its index, assets/search-index.json, is built from every page)
-  Every <section class="section dark"> also gets a layer of 3D logos drifting up through its background.
+  {{video:slot}} {{video:slot:eager}}  background video  {{icon:name}} {{icon:name:lg}}  inline SVG icon
+  {{logo}} church logo (falls back to {{mark}})  {{mark}} {{aurora}} {{wave}} {{wave:top}} {{wave:colour}}  decorations
+  {{logo3d:hero|page|cta|badge}}  animated 3D logo   {{ring:text}}  text running round a circle   {{map}}  Google map
+  {{form:contact|visit}}  a form (a mock-up in the preview; in WordPress it emails the church)
+Header only: {{cur:slug}} current-page class, {{nav}} {{header_cta}} {{promo_strip}} {{brand_text}} {{site_name}}
+  {{search_quick}} (menus and Customizer settings in WordPress), {{logo_defs}} shared SVG symbol and gradients,
+  {{search_attrs}} {{search_index}} the header search and its index (built from every page)
+Footer tail: {{video_list}} the clips every video spot cycles through, {{preview_pill}}
+Every <section class="section dark"> also gets a layer of 3D logos drifting up through its background.
 
 Run:  python3 build.py
 """
@@ -26,12 +33,14 @@ import shutil
 from html.parser import HTMLParser
 from pathlib import Path
 
+import blocks
+
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
 SITE = ROOT / "docs"  # GitHub Pages serves this folder (Settings > Pages > main, /docs)
 THEME = ROOT / "wordpress" / "one-christian-church"
 SITE_NAME = "One Christian Church"
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 
 # Placeholder footage: Mixkit clips under the Mixkit Stock Video Free License (each clip page checked).
 # Mixkit's terms don't allow linking to their files, so the site never streams from Mixkit:
@@ -56,6 +65,41 @@ VIDEOS = {
 PLAYLIST = [slot for i, (slot, (clip, _, _)) in enumerate(VIDEOS.items()) if clip not in [v[0] for v in list(VIDEOS.values())[:i]]]
 PAGE_SLUGS = ["new-here", "about", "ministries", "events", "listen", "give", "contact"]
 
+# Header and search defaults. In WordPress these become the "Main menu" and "Search shortcuts" menus and
+# Customizer settings (Appearance > Customize > Header), so they can be changed without touching the theme.
+NAV = [("about", "About"), ("ministries", "Ministries"), ("events", "Events"), ("listen", "Watch &amp; Listen"), ("give", "Give"), ("contact", "Contact")]
+QUICK = [("new-here", "Plan a visit"), ("events", "This week"), ("ministries#young-adults", "Young Adults"), ("ministries#kids", "Kids"), ("listen", "Sermons"), ("give", "Give")]
+PROMO = {"text": "New here? We saved you a seat this Sunday at 10:00.", "link": "Plan your visit &rarr;", "url": "new-here"}
+BRAND = {"name": "One Christian", "sub": "Church &middot; Greenwood"}
+CTA = {"label": "Plan a Visit", "url": "new-here"}
+FORM_EMAIL = "onecc.office@gmail.com"
+
+# The two forms. In the preview they are mock-ups; in WordPress [occ_form] emails the answers to the address in
+# Appearance > Customize > Forms and keeps a copy under Messages. Rows with two fields sit side by side.
+FORMS = {
+    "contact": {
+        "label": "Contact form",
+        "subject": "Message from the website",
+        "button": "Send message",
+        "rows": [
+            [("name", "Name", "text", True), ("email", "Email", "email", True)],
+            [("topic", "I'd like to&hellip;", ["Plan a visit", "Ask a question", "Share a prayer request", "Get connected to a ministry", "Something else"], False)],
+            [("message", "Message", "textarea", True)],
+        ],
+        "sent": "Thanks! Your message is on its way to the church office.",
+    },
+    "visit": {
+        "label": "Plan a visit form",
+        "subject": "Someone is planning a visit",
+        "button": "Plan my visit",
+        "rows": [
+            [("name", "Name", "text", True), ("email", "Email", "email", True)],
+            [("date", "Which Sunday?", "date", False), ("kids", "Bringing kids?", ["No", "Yes, infants&ndash;K", "Yes, 1st&ndash;5th grade", "Yes, both"], False)],
+        ],
+        "sent": "Thanks! We'll have someone ready to welcome you.",
+    },
+}
+
 ICONS = {
     "arrow": '<path d="M5 12h14M13 6l6 6-6 6"/>',
     "clock": '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -78,6 +122,7 @@ ICONS = {
     "smile": '<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/>',
     "sparkle": '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
     "music": '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+    "lunch": '<path d="M3 11h18M5 11V8a7 7 0 0 1 14 0v3M4 11l2 9h12l2-9"/>',
     "menu": '<path d="M4 7h16M4 12h16M4 17h16"/>',
     "search": '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>',
     "facebook": '<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8z"/>',
@@ -113,8 +158,12 @@ DRIFT_LAYOUTS = [
     [(10, 120, 95, .70, .40, 65), (68, 190, 105, .25, .36, 70)],
     [(4, 200, 100, .50, .34, 72), (80, 140, 90, .05, .40, 58)],
 ]
-WAVE = ('<svg class="wave{cls}" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">'
+WAVE = ('<svg class="wave{cls}"{style} viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">'
         '<path d="M0 46c120-26 240-38 360-24s240 52 360 52 240-40 360-50 240 6 360 26v40H0z"/></svg>')
+RING = ('<svg viewBox="0 0 150 150"><defs><path id="occ-ring" d="M75 75m-58 0a58 58 0 1 1 116 0a58 58 0 1 1-116 0"/></defs>'
+        '<text><textPath href="#occ-ring">{text}</textPath></text></svg>')
+MAP_QUERY = "2578 Lawrence Dr, Greenwood, IN 46143"
+MAP = '<iframe title="Map to One Christian Church" loading="lazy" src="https://www.google.com/maps?q={q}&amp;output=embed"></iframe>'
 
 PAGE_HERO = """<section class="hero hero-page">
   <div class="media">{aurora}{video}</div>
@@ -126,7 +175,7 @@ PAGE_HERO = """<section class="hero hero-page">
     <p class="lead">{lead}</p>
   </div>
   {toggle}
-  <svg class="wave" style="--wave:var(--{wave})" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46c120-26 240-38 360-24s240 52 360 52 240-40 360-50 240 6 360 26v40H0z"/></svg>
+  {{{{wave:{wave}}}}}
 </section>
 """
 TOGGLE = '<button class="video-toggle" type="button" data-video-toggle aria-pressed="false">Pause video</button>'
@@ -162,9 +211,54 @@ PREVIEW_PILL = ('<div class="preview-pill" data-preview-pill role="note"><span><
                 'Videos are placeholders and forms are mock-ups.</span><button type="button" aria-label="Hide this note">&times;</button></div>')
 
 
-def icon(name: str) -> str:
-    return ('<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+def icon(name: str, lg: bool = False) -> str:
+    cls, width = ("ico ico-lg", "1.6") if lg else ("ico", "1.8")
+    return (f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{width}" '
             f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[name]}</svg>')
+
+
+def wave(arg: str = "") -> str:
+    if arg == "top":
+        return WAVE.format(cls=" top", style="")
+    return WAVE.format(cls="", style=f' style="--wave:var(--{arg})"' if arg else "")
+
+
+def map_frame(q: str = MAP_QUERY) -> str:
+    return MAP.format(q=html.escape(q.replace(" ", "+")))
+
+
+def form_html(kind: str, wp: bool) -> str:
+    """The form's fields. WordPress fills in {{form_action}}, {{form_hidden}} and {{form_status}} (see occ_form_shortcode)."""
+    spec = FORMS[kind]
+
+    def field(name, label, kind_, required):
+        fid, req = f"{kind}-{name}", " required" if required else ""
+        if isinstance(kind_, list):
+            control = f'<select id="{fid}" name="{name}">' + "".join(f"<option>{o}</option>" for o in kind_) + "</select>"
+        elif kind_ == "textarea":
+            control = f'<textarea id="{fid}" name="{name}" rows="5"{req}></textarea>'
+        else:
+            control = f'<input id="{fid}" name="{name}"' + ("" if kind_ == "text" else f' type="{kind_}"') + f"{req}>"
+        return f'<div class="field"><label for="{fid}">{label}</label>{control}</div>'
+    rows = []
+    for row in spec["rows"]:
+        cells = "".join(field(*f) for f in row)
+        rows.append(f'<div class="form-row">{cells}</div>' if len(row) > 1 else cells)
+    attrs = 'method="post" action="{{form_action}}"' if wp else "data-mock-form"
+    status = "{{form_status}}" if wp else '<p class="form-ok" hidden>Thanks! This is a preview, so nothing was sent.</p>'
+    return (f'<form class="occ-form" id="occ-form-{kind}" {attrs}>' + ("{{form_hidden}}" if wp else "") + "".join(rows)
+            + f'<button class="btn btn-sun" type="submit">{spec["button"]} {{{{icon:arrow}}}}</button>{status}</form>')
+
+
+def forms_data() -> dict:
+    """What the WordPress form handler needs to know about each form."""
+    out = {}
+    for kind, spec in FORMS.items():
+        fields = [{"name": n, "label": html.unescape(label), "type": "select" if isinstance(k, list) else k, "required": r,
+                   "options": [html.unescape(o) for o in k] if isinstance(k, list) else []}
+                  for row in spec["rows"] for n, label, k, r in row]
+        out[kind] = {"label": spec["label"], "subject": spec["subject"], "sent": spec["sent"], "fields": fields}
+    return out
 
 
 def _mix(a: str, b: str, t: float) -> str:
@@ -293,7 +387,7 @@ def search_index(parsed) -> list:
     order = ["index", *PAGE_SLUGS]  # visitors' pages first, so an equal match lists Ministries before Events
     for slug, meta, body in sorted((p for p in parsed if p[0] in order), key=lambda p: order.index(p[0])):
         page = PageText()
-        page.feed(render_static(hero_for(meta) + body, ""))
+        page.feed(render_static(page_html(meta, body)[0], ""))
         for e in page.entries:
             h, t = (" ".join("".join(e[k]).split()) for k in ("h", "t"))
             if h:
@@ -316,8 +410,21 @@ def common(text: str) -> str:
     text = re.sub(r"\{\{logo3d:(\w+)\}\}", lambda m: logo3d(m.group(1)), text)
     sections = iter(range(100))
     text = re.sub(r'(<section class="section dark"[^>]*>)', lambda m: m.group(1) + drift(next(sections)), text)
-    text = text.replace("{{wave:top}}", WAVE.format(cls=" top")).replace("{{wave}}", WAVE.format(cls=""))
-    return re.sub(r"\{\{icon:(\w+)\}\}", lambda m: icon(m.group(1)), text)
+    text = re.sub(r"\{\{wave(?::([\w-]+))?\}\}", lambda m: wave(m.group(1) or ""), text)
+    text = re.sub(r"\{\{ring:([^{}]+)\}\}", lambda m: RING.format(text=m.group(1)), text)
+    text = text.replace("{{map}}", map_frame())
+    return re.sub(r"\{\{icon:(\w+)(:lg)?\}\}", lambda m: icon(m.group(1), bool(m.group(2))), text)
+
+
+def header_static(text: str) -> str:
+    """The header with the theme's default menu and settings (WordPress fills the same spots from its menus)."""
+    nav = '<ul class="nav-list">' + "".join(f'<li><a class="nav-link {{{{cur:{slug}}}}}" href="{{{{url:{slug}}}}}">{label}</a></li>' for slug, label in NAV) + "</ul>"
+    quick = "".join(f'<a href="{{{{url:{url}}}}}">{label}</a>' for url, label in QUICK)
+    return (text.replace("{{nav}}", nav).replace("{{search_quick}}", quick)
+            .replace("{{promo_strip}}", f'<div class="promo-strip">{PROMO["text"]} <a href="{{{{url:{PROMO["url"]}}}}}">{PROMO["link"]}</a></div>')
+            .replace("{{brand_text}}", f'<span class="brand-text"><span class="brand-name">{BRAND["name"]}</span><span class="brand-sub">{BRAND["sub"]}</span></span>')
+            .replace("{{header_cta}}", f'<a class="btn btn-sun nav-cta" href="{{{{url:{CTA["url"]}}}}}">{CTA["label"]}</a>')
+            .replace("{{site_name}}", SITE_NAME))
 
 
 def render_static(text: str, nav: str) -> str:
@@ -325,6 +432,7 @@ def render_static(text: str, nav: str) -> str:
         slug, _, anchor = m.group(1).partition("#")
         page = "index.html" if slug == "home" else f"{slug}.html"
         return page + (f"#{anchor}" if anchor else "")
+    text = re.sub(r"\{\{form:(\w+)\}\}", lambda m: form_html(m.group(1), wp=False), text)
     text = re.sub(r"\{\{url:([\w#-]+)\}\}", url, text)
     text = re.sub(r"\{\{asset:([\w./-]+)\}\}", r"assets/\1", text)
     text = re.sub(r"\{\{video:([\w-]+)(:eager)?\}\}", lambda m: video_tag(m.group(1), bool(m.group(2))), text)
@@ -334,10 +442,12 @@ def render_static(text: str, nav: str) -> str:
     text = text.replace("{{video_list}}", f'<script type="application/json" id="occ-videos">{json.dumps(clips)}</script>')
     pages = {s: "index.html" if s == "home" else f"{s}.html" for s in ["home", *PAGE_SLUGS]}
     text = text.replace("{{search_attrs}}", f'data-search-pages="{html.escape(json.dumps(pages))}"')
+    text = text.replace("{{search_index}}", "assets/search-index.json")
     return common(text)
 
 
 def render_wp(text: str) -> str:
+    """For the theme's PHP templates (header, footer, 404). Page content goes through blocks.py instead."""
     def url(m):
         slug, _, anchor = m.group(1).partition("#")
         return f"<?php echo esc_url( occ_url( '{slug}', '{anchor}' ) ); ?>"
@@ -345,11 +455,19 @@ def render_wp(text: str) -> str:
     text = re.sub(r"\{\{asset:([\w./-]+)\}\}", r"<?php echo esc_url( get_theme_file_uri( 'assets/\1' ) ); ?>", text)
     text = re.sub(r"\{\{video:([\w-]+)(:eager)?\}\}",
                   lambda m: f"<?php occ_video( '{m.group(1)}', {'true' if m.group(2) else 'false'} ); ?>", text)
-    text = re.sub(r"\{\{cur:([\w-]+)\}\}", lambda m: f"<?php occ_current( '{m.group(1)}' ); ?>", text)
     text = text.replace("{{logo}}", "<?php occ_logo(); ?>").replace("{{video_list}}", "<?php occ_video_list(); ?>")
+    for name in ("nav", "header_cta", "promo_strip", "brand_text", "search_quick"):
+        text = text.replace("{{%s}}" % name, f"<?php occ_{name}(); ?>")
+    text = text.replace("{{site_name}}", "<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>")
     text = text.replace("{{search_attrs}}", 'data-search-pages="<?php echo esc_attr( wp_json_encode( occ_search_pages() ) ); ?>" data-native')
-    text = text.replace("{{preview_pill}}", "<?php if ( get_theme_mod( 'occ_preview_badge', true ) ) : ?>" + PREVIEW_PILL + "<?php endif; ?>")
+    text = text.replace("{{search_index}}", "<?php echo esc_url( rest_url( 'occ/v1/search-index' ) ); ?>")
+    text = text.replace("{{preview_pill}}", "<?php if ( get_theme_mod( 'occ_preview_badge', false ) ) : ?>" + PREVIEW_PILL + "<?php endif; ?>")
     return common(text)
+
+
+def page_html(meta, body) -> tuple:
+    """(normalised HTML for the preview, block markup for WordPress) of a page: its title hero, then its body."""
+    return blocks.page_blocks(hero_for(meta) + body)
 
 
 def hero_for(meta) -> str:
@@ -367,6 +485,9 @@ def hero_for(meta) -> str:
     )
 
 
+FOOTER_TAIL = "{{preview_pill}}\n{{video_list}}\n"
+
+
 def build_static(parsed, header, footer):
     # Everything in docs/ is regenerated except docs/assets/video/ (the downloaded clips) and a custom-domain CNAME.
     if SITE.exists():
@@ -380,18 +501,20 @@ def build_static(parsed, header, footer):
     (SITE / "assets" / "video").mkdir(exist_ok=True)
     (SITE / "assets" / "video" / "README.txt").write_text(video_readme())
     (SITE / ".nojekyll").write_text("")
+    footer_html = blocks.page_blocks(footer)[0] + FOOTER_TAIL
     for slug, meta, body in parsed:
         title = meta["title"] if slug == "index" else f"{meta['title']} | {SITE_NAME}"
         out = STATIC_SHELL.format(
             title=html.escape(title), description=html.escape(meta.get("description", "")),
-            fonts=FONTS, slug=slug, header=header, hero=hero_for(meta), body=body, footer=footer,
+            fonts=FONTS, slug=slug, header=header_static(header), hero="", body=page_html(meta, body)[0], footer=footer_html,
         )
         (SITE / f"{slug}.html").write_text(render_static(out, meta.get("nav", "")))
 
 
 WP_HEADER = """<?php
 /**
- * Site header: promo strip and navigation.
+ * Site header: promo strip, navigation and search. Generated from src/parts/header.html by build.py.
+ * The menu, promo strip, brand text and button come from Appearance > Menus and Appearance > Customize > Header.
  *
  * @package One_Christian_Church
  */
@@ -406,15 +529,23 @@ WP_HEADER = """<?php
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 """
-WP_FOOTER_TAIL = """<?php wp_footer(); ?>
+WP_FOOTER = """<?php
+/**
+ * Site footer: the "Site footer" synced pattern (Appearance > Patterns), then the scripts.
+ *
+ * @package One_Christian_Church
+ */
+
+occ_footer();
+?>
+{tail}
+<?php wp_footer(); ?>
 </body>
 </html>
 """
-WP_PAGE = """<?php
+WP_404 = """<?php
 /**
- * {label}
- *
- * Generated from src/pages/{src}.html by build.py; edit the source and rebuild.
+ * Page not found. Generated from src/pages/404.html by build.py.
  *
  * @package One_Christian_Church
  */
@@ -433,34 +564,61 @@ def build_wp(parsed, header, footer):
     for p in THEME.glob("*.php"):
         if p.name.startswith(("page-", "front-page")) or p.name in ("header.php", "footer.php", "404.php"):
             p.unlink()
-    if (THEME / "assets").exists():
-        shutil.rmtree(THEME / "assets")
+    for folder in ("assets", "inc/content", "inc/forms"):
+        if (THEME / folder).exists():
+            shutil.rmtree(THEME / folder)
     shutil.copytree(ROOT / "assets", THEME / "assets")
+    (THEME / "inc" / "content").mkdir(parents=True)
+    (THEME / "inc" / "forms").mkdir(parents=True)
     (THEME / "header.php").write_text(WP_HEADER + render_wp(header))
-    (THEME / "footer.php").write_text(render_wp(footer) + "\n" + WP_FOOTER_TAIL)
-    descriptions, titles = {}, {}
+    (THEME / "footer.php").write_text(WP_FOOTER.format(tail=render_wp(FOOTER_TAIL).strip()))
+    # The content the theme puts into each page (and the footer pattern) when it is activated
+    (THEME / "inc" / "content" / "footer.html").write_text(blocks.page_blocks(footer)[1] + "\n")
+    descriptions, pages = {}, []
     for slug, meta, body in parsed:
-        content = render_wp(hero_for(meta) + body)
-        if slug == "index":
-            name, label = "front-page.php", "Front page (Home)"
-        elif slug == "404":
-            name, label = "404.php", "Page not found"
-        else:
-            name, label = f"page-{slug}.php", f"Page template for the \"{meta['title']}\" page (slug: {slug})"
-            titles[slug] = meta.get("menu", meta["title"])
         descriptions["home" if slug == "index" else slug] = meta.get("description", "")
-        (THEME / name).write_text(WP_PAGE.format(label=label, src=slug, content=content))
+        if slug == "404":
+            (THEME / "404.php").write_text(WP_404.format(content=render_wp(page_html(meta, body)[0])))
+            continue
+        key = "home" if slug == "index" else slug
+        (THEME / "inc" / "content" / f"{key}.html").write_text(page_html(meta, body)[1] + "\n")
+        if slug != "index":
+            pages.append({"slug": slug, "title": html.unescape(meta["title"]), "menu": html.unescape(meta.get("menu", meta["title"]))})
+    for kind in FORMS:
+        (THEME / "inc" / "forms" / f"{kind}.html").write_text(common(form_html(kind, wp=True)) + "\n")
+    pages.sort(key=lambda p: PAGE_SLUGS.index(p["slug"]))
     data = {
         "version": VERSION,
-        "pages": [{"slug": s, "title": titles[s]} for s in PAGE_SLUGS],
+        "pages": pages,
         "descriptions": descriptions,
-        "videos": {k: {"label": v[2]}
-                   for k, v in VIDEOS.items()},
+        "videos": {k: {"label": v[2]} for k, v in VIDEOS.items()},
         "playlist": PLAYLIST,
         "fonts": FONTS,
+        "menus": {
+            "primary": [{"title": html.unescape(label), "slug": slug, "anchor": ""} for slug, label in NAV],
+            "search": [{"title": html.unescape(label), "slug": url.partition("#")[0], "anchor": url.partition("#")[2]} for url, label in QUICK],
+        },
+        "header": {"promo_text": html.unescape(PROMO["text"]), "promo_link": html.unescape(PROMO["link"]), "promo_url": PROMO["url"],
+                   "brand_name": html.unescape(BRAND["name"]), "brand_sub": html.unescape(BRAND["sub"]),
+                   "cta_label": CTA["label"], "cta_url": CTA["url"]},
+        "form_email": FORM_EMAIL,
+        "forms": forms_data(),
     }
-    (THEME / "inc").mkdir(exist_ok=True)
-    (THEME / "inc" / "theme-data.json").write_text(json.dumps(data, indent=1))
+    (THEME / "inc" / "theme-data.json").write_text(json.dumps(data, indent=1, ensure_ascii=False))
+    # Pieces the [occ_…] shortcodes print
+    fragments = {
+        "icons": {n: icon(n) for n in ICONS},
+        "icons_lg": {n: icon(n, True) for n in ICONS},
+        "logo3d": {k: logo3d(k) for k in LOGO3D},
+        "aurora": AURORA,
+        "mark": MARK,
+        "wave": WAVE,
+        "ring": RING,
+        "map": MAP,
+        "map_query": MAP_QUERY,
+        "drift": [drift(i) for i in range(len(DRIFT_LAYOUTS))],
+    }
+    (THEME / "inc" / "fragments.json").write_text(json.dumps(fragments, ensure_ascii=False))
 
 
 def main():
@@ -470,8 +628,7 @@ def main():
     build_static(parsed, header, footer)
     build_wp(parsed, header, footer)
     index = json.dumps(search_index(parsed), ensure_ascii=False, separators=(",", ":"))
-    for folder in (SITE, THEME):
-        (folder / "assets" / "search-index.json").write_text(index)
+    (SITE / "assets" / "search-index.json").write_text(index)
     print(f"built {len(parsed)} pages -> docs/ and wordpress/one-christian-church/")
 
 

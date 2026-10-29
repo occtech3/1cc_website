@@ -1,4 +1,4 @@
-// One Christian Church design preview: header, menu, background videos, scroll effects, mock forms.
+// One Christian Church: header, menu, search, background videos, scroll effects, preview mock forms.
 document.documentElement.classList.add("js");
 
 const body = document.body;
@@ -39,7 +39,8 @@ if (toggle) {
   document.querySelectorAll(".primary-nav a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
 }
 
-/* Site search: every page's headings and text (indexed by build.py), fetched the first time search opens.
+/* Site search: every page's headings and text, fetched the first time search opens (built by build.py for the
+   preview; WordPress builds it from the live pages, and each entry carries its page's address in "u").
    Enter goes to the top result; in WordPress, Enter with no match falls through to the normal site search. */
 const search = document.querySelector("[data-search]");
 if (search && typeof search.showModal === "function") {
@@ -85,7 +86,7 @@ if (search && typeof search.showModal === "function") {
     status.textContent = found.length
       ? `${found.length} result${found.length === 1 ? "" : "s"}`
       : `No matches for “${q}”.${native ? " Press Enter to search the whole site." : " Try “Sunday”, “kids” or “youth”."}`;
-    list.innerHTML = found.slice(0, 8).map((e) => `<li><a href="${esc((pages[e.s] || "") + (e.a ? `#${e.a}` : ""))}">`
+    list.innerHTML = found.slice(0, 8).map((e) => `<li><a href="${esc((e.u || pages[e.s] || "") + (e.a ? `#${e.a}` : ""))}">`
       + `<span class="sr-page">${esc(e.p)}</span><span class="sr-title">${highlight(e.h, re)}</span>`
       + (e.t ? `<span class="sr-snip">${highlight(snippet(e, terms), re)}</span>` : "") + "</a></li>").join("");
   };
@@ -199,7 +200,7 @@ syncToggles();
 if (videosPaused) videos.forEach(load);
 
 /* Hero rotating words */
-document.querySelectorAll("[data-rotator]").forEach((el) => {
+document.querySelectorAll(".rotator").forEach((el) => {
   const items = [...el.children];
   if (items.length < 2 || reduceMotion) return;
   let i = 0;
@@ -217,15 +218,18 @@ document.querySelectorAll("[data-rotator]").forEach((el) => {
 const rio = new IntersectionObserver((entries) => entries.forEach((en) => {
   if (en.isIntersecting) { en.target.classList.add("is-in"); rio.unobserve(en.target); }
 }), { rootMargin: "0px 0px -10% 0px" });
+// Text the editor keeps in a <p class="x-inline"> counts as a child of the box around it
+const kids = (box) => [...box.children].flatMap((c) => (c.classList.contains("x-inline") ? [...c.children] : [c]));
 document.querySelectorAll(".reveal").forEach((el) => {
-  const group = el.parentElement ? [...el.parentElement.children].filter((c) => c.classList.contains("reveal")) : [];
+  const box = el.parentElement && el.parentElement.classList.contains("x-inline") ? el.parentElement.parentElement : el.parentElement;
+  const group = box ? kids(box).filter((c) => c.classList.contains("reveal")) : [];
   const idx = group.indexOf(el);
   if (idx > 0) el.style.transitionDelay = `${Math.min(idx, 5) * 90}ms`;
   rio.observe(el);
 });
 
 /* Statement: words light up as it scrolls through the viewport */
-const fills = [...document.querySelectorAll("[data-fill]")].map((el) => {
+const fills = [...document.querySelectorAll(".statement")].map((el) => {
   const walk = (node) => {
     [...node.childNodes].forEach((n) => {
       if (n.nodeType === 3) {
@@ -247,13 +251,14 @@ const fills = [...document.querySelectorAll("[data-fill]")].map((el) => {
 });
 
 /* Story: a pinned section whose video and words change with scroll position */
-const stories = [...document.querySelectorAll("[data-story]")].map((el) => ({
+const stories = [...document.querySelectorAll(".story")].map((el) => ({
   el,
   vids: [...el.querySelectorAll(".story-media video")],
   panels: [...el.querySelectorAll(".story-panel")],
   bars: [...el.querySelectorAll(".story-progress i")],
   active: -1,
 }));
+stories.forEach((s) => s.el.style.setProperty("--panels", String(s.panels.length || 1)));  // one screen of scrolling per panel
 const setStory = (s, idx) => {
   if (idx === s.active) return;
   s.active = idx;
@@ -330,7 +335,7 @@ if (tilters.length && !reduceMotion && window.matchMedia("(pointer: fine)").matc
 }
 
 /* Carousels */
-document.querySelectorAll("[data-carousel]").forEach((c) => {
+document.querySelectorAll(".carousel").forEach((c) => {
   const track = c.querySelector(".carousel-track");
   const step = () => (track.firstElementChild ? track.firstElementChild.getBoundingClientRect().width + 22 : 320);
   c.querySelectorAll("[data-dir]").forEach((b) => b.addEventListener("click", () => {

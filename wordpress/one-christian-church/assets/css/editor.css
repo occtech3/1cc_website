@@ -1,0 +1,25 @@
+/* Block editor only (loaded after style.css): the scroll effects and videos don't run while editing, so show
+   every block where it can be read and clicked, and keep the design's colours behind white text. */
+.reveal { opacity: 1 !important; transform: none !important; }
+.x-inline { all: unset !important; display: block !important; }  /* the editor needs a real box to type in */
+.card-link::after { content: none; }
+.hero, .band, .story, .vcard, .cta-band { background: linear-gradient(135deg, #2A1466, #120B2B 55%, #5B1D5E); }
+.vcard { background: linear-gradient(160deg, var(--c1), var(--c2)); }
+.hero { margin-top: 0; }
+.hero-home, .hero-page, .band { min-height: 0; }
+.hero-copy { padding: 60px 0 80px; }
+.story { height: auto; }
+.story-sticky { position: relative; height: auto; overflow: visible; }
+.story-copy { position: relative; inset: auto; padding: 60px 0; }
+.story-panels { min-height: 0; display: grid; gap: 48px; }
+.story-panel { position: relative; inset: auto; opacity: 1; transform: none; pointer-events: auto; }
+.rotator { height: auto; }
+.rotator span { position: static; display: inline-block; opacity: 1; transform: rotate(-4deg); margin-right: .35em; }
+.statement { color: #fff; }
+
+/* The design's backgrounds, videos and icons are Custom HTML blocks: show them as a small label until clicked */
+.wp-block-html:not(.is-selected) { position: relative !important; inset: auto !important; display: inline-block; margin: 4px 0; }
+.wp-block-html:not(.is-selected) > * { display: none !important; }
+.wp-block-html:not(.is-selected)::before { content: "\2726  Design element (HTML)"; display: inline-block; padding: 4px 10px; border-radius: 999px; background: rgba(123, 63, 242, .14); color: #5B2FD6; font: 700 11px/1.4 var(--sans); letter-spacing: .06em; text-transform: uppercase; }
+.wp-block-html.is-selected { position: relative !important; inset: auto !important; display: block; z-index: 5; }
+.wp-block-html.is-selected textarea { color: var(--night); background: #fff; font: 13px/1.5 ui-monospace, Menlo, monospace; }
