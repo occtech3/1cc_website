@@ -8,11 +8,11 @@ The sunset clip (4119) was swapped in later and its licence line has not been re
 
 | File | Shows | Source |
 |---|---|---|
-| `hero.mp4` | Guitarist on stage (home hero) | [mixkit.co/free-stock-video/guitarist-playing-on-stage-486](https://mixkit.co/free-stock-video/guitarist-playing-on-stage-486/) |
-| `love-god.mp4` | Singer on stage (story: Love God) | [mixkit.co/free-stock-video/a-long-haired-woman-singing-on-stage-478](https://mixkit.co/free-stock-video/a-long-haired-woman-singing-on-stage-478/) |
+| `hero.mp4` | Guitarist on stage (home hero, Youth band) | [mixkit.co/free-stock-video/guitarist-playing-on-stage-486](https://mixkit.co/free-stock-video/guitarist-playing-on-stage-486/) |
+| `love-god.mp4` | Singer on stage (story: Love God, Events) | [mixkit.co/free-stock-video/a-long-haired-woman-singing-on-stage-478](https://mixkit.co/free-stock-video/a-long-haired-woman-singing-on-stage-478/) |
 | `love-people.mp4` | Friends laughing (story: Love People) | [mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537](https://mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537/) |
 | `walk.mp4` | Sunset over the sea (story: Walk with Jesus, About, GriefShare) | [mixkit.co/free-stock-video/stunning-sunset-seen-from-the-sea-4119](https://mixkit.co/free-stock-video/stunning-sunset-seen-from-the-sea-4119/) |
-| `disciples.mp4` | Crowd at a concert (story: Make Disciples, Events, Youth band) | [mixkit.co/free-stock-video/audience-at-a-concert-4269](https://mixkit.co/free-stock-video/audience-at-a-concert-4269/) |
+| `disciples.mp4` | Crowd at a concert (story: Make Disciples) | [mixkit.co/free-stock-video/audience-at-a-concert-4269](https://mixkit.co/free-stock-video/audience-at-a-concert-4269/) |
 | `kids.mp4` | Kids running on a pier (Kids) | [mixkit.co/free-stock-video/three-kids-running-in-a-wooden-pier-48264](https://mixkit.co/free-stock-video/three-kids-running-in-a-wooden-pier-48264/) |
 | `youth.mp4` | Friends laughing (OCC Youth card), a copy of `love-people.mp4` for now | [mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537](https://mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537/) |
 | `adults.mp4` | Friends at a coffee shop (First Sunday, Contact) | [mixkit.co/free-stock-video/date-between-two-girl-friends-in-a-coffee-shop-41813](https://mixkit.co/free-stock-video/date-between-two-girl-friends-in-a-coffee-shop-41813/) |

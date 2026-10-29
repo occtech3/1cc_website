@@ -42,7 +42,7 @@ get_header();
 </section>
 
 <section class="band" style="min-height:70svh">
-  <div class="media"><div data-parallax="0.12" style="position:absolute;inset:0"><div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div><?php occ_video( 'disciples', false ); ?></div></div>
+  <div class="media"><div data-parallax="0.12" style="position:absolute;inset:0"><div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div><?php occ_video( 'hero', false ); ?></div></div>
   <div class="tint tint-color"></div><div class="tint tint-dark"></div>
   <div class="wrap">
     <h2 class="reveal">Wednesday<br>nights are <span class="script" style="font-size:1.05em">loud.</span></h2>
