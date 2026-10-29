@@ -609,8 +609,6 @@ p { margin: 0 0 1em; }
 .mission { position: relative; overflow: hidden; text-align: center; padding: clamp(96px, 12vw, 168px) 0 clamp(130px, 16vw, 230px); background: radial-gradient(55% 45% at 50% 34%, rgba(255, 45, 135, .09), transparent 70%), radial-gradient(35% 40% at 84% 74%, rgba(123, 63, 242, .08), transparent 70%), radial-gradient(30% 35% at 14% 70%, rgba(24, 209, 192, .08), transparent 70%), var(--cream); }
 .mission .wave { --wave: var(--night); }
 .mission-inner { display: flex; flex-direction: column; align-items: center; }
-.mission .kicker { margin-bottom: clamp(18px, 2.6vw, 30px); }
-.mission .kicker::after { content: ""; width: 34px; height: 4px; border-radius: 4px; background: var(--grad-sun); }
 .mission-title { display: flex; flex-direction: column; align-items: center; margin: 0; line-height: .86; }
 .mission-script { position: relative; z-index: 1; margin-bottom: -.3em; padding: 0 .2em .08em; font: 700 clamp(2.9rem, 6.4vw, 5.4rem)/1 var(--script); text-transform: none; letter-spacing: 0; transform: rotate(-6deg); background: var(--grad-electric); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 3px 0 var(--cream)) drop-shadow(0 -2px 0 var(--cream)); }
 .mission-word { padding: 0 0 .04em .05em; font: 400 clamp(4.2rem, 13.5vw, 11.5rem)/.9 var(--display); letter-spacing: .05em; background: linear-gradient(100deg, transparent 40%, #7B3FF2 45%, #FF2D87 50%, #FF7A1A 54%, #FFC93C 57%, transparent 62%) 100% 0 / 300% 100% no-repeat, linear-gradient(180deg, #3A2584, var(--night) 70%); -webkit-background-clip: text; background-clip: text; color: transparent; animation: mission-gleam 9s cubic-bezier(.5, 0, .3, 1) 1.2s infinite; }
