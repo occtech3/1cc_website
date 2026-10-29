@@ -113,16 +113,7 @@ function occ_logo() {
  * @param bool   $eager True for hero videos that should start loading right away.
  */
 function occ_video( $slot, $eager = false ) {
-	$videos = occ_data()['videos'];
-	if ( empty( $videos[ $slot ] ) ) {
-		return;
-	}
-	// A Customizer URL wins; otherwise use assets/video/{slot}.mp4 if it was added to the theme.
-	// With neither, print nothing and the animated colour background shows.
-	$src = get_theme_mod( 'occ_video_' . $slot );
-	if ( ! $src && file_exists( get_theme_file_path( 'assets/video/' . $slot . '.mp4' ) ) ) {
-		$src = get_theme_file_uri( 'assets/video/' . $slot . '.mp4' );
-	}
+	$src = occ_video_src( $slot );
 	if ( ! $src ) {
 		return;
 	}
@@ -135,6 +126,42 @@ function occ_video( $slot, $eager = false ) {
 	);
 	printf( '<source %s="%s" type="video/mp4">', esc_attr( $attr ), esc_url( $src ) );
 	echo '</video>';
+}
+
+/**
+ * URL of a background video slot: a Customizer URL wins; otherwise assets/video/{slot}.mp4 if it was added to the theme.
+ * With neither, it is empty and the animated colour background shows.
+ *
+ * @param string $slot Video slot.
+ * @return string
+ */
+function occ_video_src( $slot ) {
+	if ( empty( occ_data()['videos'][ $slot ] ) ) {
+		return '';
+	}
+	$src = get_theme_mod( 'occ_video_' . $slot );
+	if ( ! $src && file_exists( get_theme_file_path( 'assets/video/' . $slot . '.mp4' ) ) ) {
+		$src = get_theme_file_uri( 'assets/video/' . $slot . '.mp4' );
+	}
+	return (string) $src;
+}
+
+/**
+ * Print the clips every video spot cycles through. A slot that only reuses another slot's clip is skipped
+ * unless a video of its own was set in the Customizer.
+ */
+function occ_video_list() {
+	$urls = array();
+	foreach ( array_keys( occ_data()['videos'] ) as $slot ) {
+		if ( ! in_array( $slot, occ_data()['playlist'], true ) && ! get_theme_mod( 'occ_video_' . $slot ) ) {
+			continue;
+		}
+		$src = occ_video_src( $slot );
+		if ( $src && ! in_array( $src, $urls, true ) ) {
+			$urls[] = esc_url_raw( $src );
+		}
+	}
+	printf( '<script type="application/json" id="occ-videos">%s</script>' . "\n", wp_json_encode( $urls ) );
 }
 
 /**

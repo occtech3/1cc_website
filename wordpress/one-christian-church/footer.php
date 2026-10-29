@@ -59,6 +59,7 @@
   </div>
 </footer>
 <?php if ( get_theme_mod( 'occ_preview_badge', true ) ) : ?><div class="preview-pill" data-preview-pill role="note"><span><b>Design preview.</b> Videos are placeholders and forms are mock-ups.</span><button type="button" aria-label="Hide this note">&times;</button></div><?php endif; ?>
+<?php occ_video_list(); ?>
 
 <?php wp_footer(); ?>
 </body>

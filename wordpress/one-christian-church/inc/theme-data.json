@@ -76,5 +76,17 @@
    "label": "Guitar close-up (Give)"
   }
  },
+ "playlist": [
+  "hero",
+  "love-god",
+  "love-people",
+  "walk",
+  "disciples",
+  "kids",
+  "adults",
+  "students",
+  "mic",
+  "guitar"
+ ],
  "fonts": "https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
 }

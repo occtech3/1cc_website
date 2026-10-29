@@ -144,6 +144,33 @@ videos.forEach((v) => {
   v.addEventListener("playing", () => v.classList.add("is-playing"));
   v.addEventListener("loadeddata", () => { if (videosPaused) v.classList.add("is-playing"); });
 });
+
+/* Every video spot cycles through all the clips: it starts on its own clip, then plays the others in turn */
+const clips = (() => {
+  try { return JSON.parse(document.getElementById("occ-videos").textContent).map((u) => new URL(u, location.href).href); } catch (e) { return []; }
+})();
+const shouldPlay = (v) => !videosPaused && v.dataset.visible && (!v.closest(".story") || v.classList.contains("is-active"));
+videos.forEach((v) => {
+  const source = v.querySelector("source");
+  if (!source) return;
+  const own = new URL(source.dataset.src || source.getAttribute("src"), location.href).href;
+  const at = clips.indexOf(own);
+  const list = at < 0 ? [own, ...clips] : [...clips.slice(at), ...clips.slice(0, at)];
+  if (list.length < 2) return;
+  let i = 0;
+  v.loop = false;
+  v.addEventListener("ended", () => {
+    i = (i + 1) % list.length;
+    v.classList.remove("is-playing");
+    setTimeout(() => {
+      source.src = list[i];
+      v.dataset.loaded = "1";
+      v.load();
+      if (shouldPlay(v)) tryPlay(v);
+    }, 700);
+  });
+});
+
 const vio = new IntersectionObserver((entries) => entries.forEach((en) => {
   const v = en.target;
   v.dataset.visible = en.isIntersecting ? "1" : "";

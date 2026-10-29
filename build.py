@@ -13,6 +13,7 @@ Placeholders used in the sources:
   {{video:slot}} {{video:slot:eager}}  background video  {{icon:name}}      inline SVG icon
   {{logo}} church logo (falls back to {{mark}})  {{mark}} {{aurora}} {{wave}} {{wave:top}}  decorations  {{cur:slug}}  current-page class in the nav
   {{logo3d:hero|page|cta|badge}}  animated 3D logo   {{logo_defs}}  shared SVG symbol and gradients (once, in the header)
+  {{video_list}}  the clips every video spot cycles through
   {{search_attrs}}  page links for the header search (its index, assets/search-index.json, is built from every page)
   Every <section class="section dark"> also gets a layer of 3D logos drifting up through its background.
 
@@ -51,6 +52,8 @@ VIDEOS = {
     "mic": (4632, "microphone-in-a-party-hall-4632", "Microphone (Watch & Listen)"),
     "guitar": (483, "playing-guitar-close-up-483", "Guitar close-up (Give)"),
 }
+# Every video spot cycles through these clips in turn (a slot that reuses another slot's clip is left out).
+PLAYLIST = [slot for i, (slot, (clip, _, _)) in enumerate(VIDEOS.items()) if clip not in [v[0] for v in list(VIDEOS.values())[:i]]]
 PAGE_SLUGS = ["new-here", "about", "ministries", "events", "listen", "give", "contact"]
 
 ICONS = {
@@ -327,6 +330,8 @@ def render_static(text: str, nav: str) -> str:
     text = re.sub(r"\{\{video:([\w-]+)(:eager)?\}\}", lambda m: video_tag(m.group(1), bool(m.group(2))), text)
     text = re.sub(r"\{\{cur:([\w-]+)\}\}", lambda m: "is-current" if m.group(1) == nav else "", text)
     text = text.replace("{{preview_pill}}", PREVIEW_PILL).replace("{{logo}}", static_logo())
+    clips = [f"assets/video/{s}.mp4" for s in PLAYLIST if (SITE / "assets" / "video" / f"{s}.mp4").exists()]
+    text = text.replace("{{video_list}}", f'<script type="application/json" id="occ-videos">{json.dumps(clips)}</script>')
     pages = {s: "index.html" if s == "home" else f"{s}.html" for s in ["home", *PAGE_SLUGS]}
     text = text.replace("{{search_attrs}}", f'data-search-pages="{html.escape(json.dumps(pages))}"')
     return common(text)
@@ -341,7 +346,7 @@ def render_wp(text: str) -> str:
     text = re.sub(r"\{\{video:([\w-]+)(:eager)?\}\}",
                   lambda m: f"<?php occ_video( '{m.group(1)}', {'true' if m.group(2) else 'false'} ); ?>", text)
     text = re.sub(r"\{\{cur:([\w-]+)\}\}", lambda m: f"<?php occ_current( '{m.group(1)}' ); ?>", text)
-    text = text.replace("{{logo}}", "<?php occ_logo(); ?>")
+    text = text.replace("{{logo}}", "<?php occ_logo(); ?>").replace("{{video_list}}", "<?php occ_video_list(); ?>")
     text = text.replace("{{search_attrs}}", 'data-search-pages="<?php echo esc_attr( wp_json_encode( occ_search_pages() ) ); ?>" data-native')
     text = text.replace("{{preview_pill}}", "<?php if ( get_theme_mod( 'occ_preview_badge', true ) ) : ?>" + PREVIEW_PILL + "<?php endif; ?>")
     return common(text)
@@ -451,6 +456,7 @@ def build_wp(parsed, header, footer):
         "descriptions": descriptions,
         "videos": {k: {"label": v[2]}
                    for k, v in VIDEOS.items()},
+        "playlist": PLAYLIST,
         "fonts": FONTS,
     }
     (THEME / "inc").mkdir(exist_ok=True)
