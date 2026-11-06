@@ -18,8 +18,9 @@ staff can edit in WordPress. Appearance > Site guide (added by the theme) explai
 1. Appearance > Themes > Add New Theme > Upload Theme, choose one-christian-church.zip, Install Now, Activate.
 2. Activation:
    * fills the pages Home, Plan a Visit, About, Ministries, Events, Watch & Listen, Give and Contact with the
-     design. Existing pages with those addresses are reused (the current front page becomes Home); missing ones
-     are created. Their previous content, template and Elementor setting are saved first.
+     design. Existing pages with those addresses are reused (the current front page becomes Home) and take the
+     design's page names; missing ones are created. Their previous title, content, template and Elementor setting
+     are saved first.
    * creates the "Main menu" and "Search shortcuts" menus and the "Site footer" pattern.
    * adds the three leader photos to the Media Library.
    Other pages and posts are not touched. Old pages at other addresses (for example about-us, contact-us)
@@ -33,7 +34,8 @@ staff can edit in WordPress. Appearance > Site guide (added by the theme) explai
   Edit these pages in the WordPress editor, not with "Edit with Elementor".
 * Header menu and search shortcuts: Appearance > Menus.
 * Promo strip, name next to the logo, "Plan a Visit" button: Appearance > Customize > Header.
-* Logo, site title, browser icon: Appearance > Customize > Site Identity.
+* Logo, site title, browser icon: Appearance > Customize > Site Identity. The design's own logo shows until
+  a logo is chosen there (a logo left over from the previous theme is not used).
 * Footer: Appearance > Site guide > Footer > Edit (a synced pattern, edited like a page).
 * Background videos: upload MP4s in Media, then paste their URLs in Customize > Background videos.
   An empty slot shows the animated colour background. The "Design preview" badge is off by default.
@@ -63,7 +65,7 @@ theme's header and footer: set those templates to draft (the Site guide warns wh
 
 == Switching back ==
 
-Activating another theme puts back each page's previous content, template and Elementor setting, and the
+Activating another theme puts back each page's previous title, content, template and Elementor setting, and the
 previous front page. Pages this theme created are set to draft. Each theme keeps its own menus. The theme's
 versions of the pages are kept, so activating it again restores the edits made with it. Switching either way
 empties the WP Super Cache, Jetpack Boost and WP Engine page caches; clear any other cache by hand.

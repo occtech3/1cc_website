@@ -180,17 +180,28 @@ function occ_search_pages() {
 }
 
 /**
- * The church logo: the Site Identity logo when one is set, otherwise the theme's vector copy of it.
+ * The church logo: a Site Identity logo chosen while this theme is active, otherwise the theme's vector copy of it.
+ * The logo the site already had when the theme was first switched on (the old theme's) is not used.
  *
  * @return string
  */
 function occ_logo_html() {
-	$id = get_theme_mod( 'custom_logo' );
-	if ( $id ) {
+	$id = (int) get_theme_mod( 'custom_logo' );
+	if ( $id && (int) get_option( 'occ_logo_before' ) !== $id ) {
 		return wp_get_attachment_image( $id, 'medium', false, array( 'class' => 'logo-img', 'alt' => '' ) );
 	}
 	return occ_fragments()['mark'];
 }
+
+// Choosing a logo in Customize > Site Identity (even the same picture again) makes it the one shown.
+add_action(
+	'customize_save_after',
+	function ( $manager ) {
+		if ( array_key_exists( 'custom_logo', $manager->unsanitized_post_values() ) ) {
+			update_option( 'occ_logo_before', 0, false );
+		}
+	}
+);
 
 /**
  * Print the church logo.

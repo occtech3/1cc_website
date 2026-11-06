@@ -4,13 +4,13 @@
  *
  * Activating the theme:
  *   - remembers the front page settings, then for each design page (Home, Plan a Visit, About, ...) finds the page
- *     (for Home, the current front page if there is one; otherwise by slug) or creates it. An existing page keeps its
- *     title, and its current content, status, page template and Elementor setting are saved with it (_occ_previous)
+ *     (for Home, the current front page if there is one; otherwise by slug) or creates it. An existing page's title,
+ *     content, status, page template and Elementor setting are saved with it (_occ_previous) and it takes the design's title
  *   - fills each page with the design's blocks, or with the content it had when this theme was last active
  *   - makes Home the front page, creates the "Site footer" pattern and the two menus if they don't exist yet
  *     (the old theme's menus stay with the old theme), and copies the leader photos into the Media Library
  * Switching to another theme:
- *   - keeps each page's content for next time (_occ_design_content), puts back what was saved, sets the pages
+ *   - keeps each page's content and title for next time (_occ_design_content, _occ_design_title), puts back what was saved, sets the pages
  *     the theme created to draft, restores the front page settings and leaves the next theme its own menus
  *
  * @package One_Christian_Church
@@ -153,6 +153,10 @@ function occ_find_page( $key, $page ) {
  */
 function occ_install() {
 	kses_remove_filters(); // the theme's own content; an admin without unfiltered_html would otherwise lose the decorations
+	// The old theme's logo picture would replace the design's logo; only one chosen while this theme is active is shown.
+	if ( false === get_option( 'occ_logo_before', false ) ) {
+		update_option( 'occ_logo_before', (int) get_theme_mod( 'custom_logo' ), false );
+	}
 	if ( false === get_option( 'occ_previous_front', false ) ) {
 		update_option(
 			'occ_previous_front',
@@ -173,6 +177,7 @@ function occ_install() {
 		if ( $post ) {
 			if ( ! get_post_meta( $post->ID, '_occ_previous', true ) && ! get_post_meta( $post->ID, '_occ_created', true ) ) {
 				$previous = array(
+					'title'     => $post->post_title,
 					'content'   => $post->post_content,
 					'status'    => $post->post_status,
 					'template'  => get_post_meta( $post->ID, '_wp_page_template', true ),
@@ -207,12 +212,15 @@ function occ_install() {
 	foreach ( $ids as $key => $id ) {
 		$saved   = get_post_meta( $id, '_occ_design_content', true );
 		$content = $saved ? $saved : occ_design_content( $key );
+		$title   = get_post_meta( $id, '_occ_design_title', true );
+		$title   = $title ? $title : occ_design_pages()[ $key ]['title'];
 		// Elementor would otherwise keep showing its own copy of the page, and its page templates skip the theme.
 		delete_post_meta( $id, '_elementor_edit_mode' );
 		update_post_meta( $id, '_wp_page_template', 'default' );
 		wp_update_post(
 			array(
 				'ID'           => $id,
+				'post_title'   => wp_slash( $title ),
 				'post_content' => wp_slash( $content ),
 				'post_status'  => 'publish',
 			)
@@ -330,11 +338,13 @@ function occ_uninstall() {
 	);
 	foreach ( $pages as $page ) {
 		update_post_meta( $page->ID, '_occ_design_content', wp_slash( $page->post_content ) );
+		update_post_meta( $page->ID, '_occ_design_title', wp_slash( $page->post_title ) );
 		$previous = get_post_meta( $page->ID, '_occ_previous', true );
 		if ( is_array( $previous ) ) {
 			wp_update_post(
 				array(
 					'ID'           => $page->ID,
+					'post_title'   => wp_slash( isset( $previous['title'] ) ? $previous['title'] : $page->post_title ),
 					'post_content' => wp_slash( $previous['content'] ),
 					'post_status'  => $previous['status'] ? $previous['status'] : 'publish',
 				)
