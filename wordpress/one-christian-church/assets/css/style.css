@@ -386,8 +386,12 @@ p { margin: 0 0 1em; }
 .note { font-size: .95rem; }
 .placeholder-note { display: block; margin-top: 1.4rem; background: #FFF3C4; border: 2px dashed #F0B400; color: #6A4A00; padding: 14px 18px; border-radius: 14px; font-size: .92rem; font-weight: 600; }
 .facts { list-style: none; padding: 0; margin: 1.6rem 0; display: grid; gap: 12px; }
-.facts li { display: flex; gap: 12px; align-items: center; font-weight: 600; }
+.facts li { position: relative; padding-left: calc(1.25em + 12px); font-weight: 600; }
+.facts li > .ico { position: absolute; left: 0; top: .15em; }
 .facts .ico { color: var(--pink); }
+.event-callout { margin: 1.4rem 0 0; padding: 14px 18px; border-radius: 14px; background: #FFF3C4; border-left: 5px solid var(--pink); color: var(--night); font-weight: 600; }
+.event-callout strong { color: var(--pink); }
+.grief-card img { display: block; width: 100%; height: auto; border-radius: var(--radius); box-shadow: var(--shadow); }
 .beliefs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; counter-reset: belief; }
 .belief { counter-increment: belief; background: #fff; border-radius: var(--radius-sm); overflow: hidden; transition: box-shadow .3s; }
 .belief[open] { box-shadow: var(--shadow); }
@@ -495,7 +499,7 @@ p { margin: 0 0 1em; }
   .cards, .big-cards, .age-grid, .leaders, .visit-grid { grid-template-columns: 1fr 1fr; }
   .story-progress { right: 14px; }
   .badge-spin { width: 120px; height: 120px; }
-  .visit-media { max-width: 520px; }
+  .visit-media, .grief-card { max-width: 520px; }
 }
 @media (max-width: 640px) {
   body { font-size: 16px; }

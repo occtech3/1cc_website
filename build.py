@@ -51,7 +51,7 @@ VIDEOS = {
     "hero": (486, "guitarist-playing-on-stage-486", "Guitarist on stage (home hero, Youth band)"),
     "love-god": (478, "a-long-haired-woman-singing-on-stage-478", "Singer on stage (story: Love God)"),
     "love-people": (4537, "a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537", "Friends laughing (story: Love People)"),
-    "walk": (4119, "stunning-sunset-seen-from-the-sea-4119", "Sunset over the sea (story: Walk with Jesus, About, GriefShare)"),
+    "walk": (4119, "stunning-sunset-seen-from-the-sea-4119", "Sunset over the sea (story: Walk with Jesus, About)"),
     "disciples": (4269, "audience-at-a-concert-4269", "Crowd at a concert (story: Make Disciples, Events)"),
     "kids": (48264, "three-kids-running-in-a-wooden-pier-48264", "Kids running on a pier (Kids)"),
     # Same clip as love-people for now; replace youth.mp4 with the church's own youth footage when there is some.
