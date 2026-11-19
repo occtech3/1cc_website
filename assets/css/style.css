@@ -99,7 +99,7 @@ p { margin: 0 0 1em; }
 .brand-sub { font-size: .76rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--yellow); margin-top: 6px; }
 .primary-nav { display: flex; align-items: center; gap: 18px; }
 .nav-list { list-style: none; display: flex; gap: 2px; margin: 0; padding: 0; }
-.nav-link { position: relative; display: block; padding: 10px 14px; color: #fff; text-decoration: none; font-weight: 700; font-size: .95rem; }
+.nav-link { position: relative; display: block; white-space: nowrap; padding: 10px 14px; color: #fff; text-decoration: none; font-weight: 700; font-size: .95rem; }
 .nav-link::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 3px; border-radius: 3px; background: var(--grad-sun); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
 .nav-link:hover::after, .nav-link.is-current::after { transform: scaleX(1); }
 .nav-cta { padding: .85em 1.4em; }
@@ -389,6 +389,10 @@ p { margin: 0 0 1em; }
 .facts li { position: relative; padding-left: calc(1.25em + 12px); font-weight: 600; }
 .facts li > .ico { position: absolute; left: 0; top: .15em; }
 .facts .ico { color: var(--pink); }
+.pastor-bio { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(24px, 5vw, 72px); align-items: start; margin-top: clamp(48px, 7vw, 96px); padding-top: clamp(36px, 5vw, 60px); border-top: 2px solid rgba(18, 11, 43, .08); }
+.pastor-bio h3 { font: 400 clamp(2.4rem, 4vw, 3.4rem)/.95 var(--display); text-transform: uppercase; margin: 0; }
+.pastor-bio .bio-text p { font-size: 1.05rem; line-height: 1.75; }
+.pastor-bio .bio-text p:first-child { margin-top: 0; }
 .grief-card img { display: block; width: 100%; height: auto; border-radius: var(--radius); box-shadow: var(--shadow); }
 .beliefs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; counter-reset: belief; }
 .belief { counter-increment: belief; background: #fff; border-radius: var(--radius-sm); overflow: hidden; transition: box-shadow .3s; }
@@ -491,7 +495,7 @@ p { margin: 0 0 1em; }
   .menu-open .nav-list li:nth-child(4) .nav-link { transition-delay: .15s; }
   .menu-open .nav-list li:nth-child(5) .nav-link { transition-delay: .2s; }
   .menu-open .nav-list li:nth-child(6) .nav-link { transition-delay: .25s; }
-  .split, .beliefs, .statement-wrap { grid-template-columns: 1fr; }
+  .split, .beliefs, .statement-wrap, .pastor-bio { grid-template-columns: 1fr; }
   .vcards { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 78%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; scrollbar-width: none; }
   .vcard { scroll-snap-align: start; min-height: 480px; }
   .cards, .big-cards, .age-grid, .leaders, .visit-grid { grid-template-columns: 1fr 1fr; }

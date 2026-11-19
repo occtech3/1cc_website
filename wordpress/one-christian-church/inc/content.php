@@ -402,6 +402,9 @@ function occ_reset_to_design( $id ) {
 	$result = wp_update_post( array( 'ID' => $id, 'post_content' => wp_slash( occ_design_content( $key ) ) ) );
 	kses_init();
 	delete_transient( 'occ_search_index' );
+	if ( $result && ! is_wp_error( $result ) ) {
+		do_action( 'occ_after_reset', $id, $key );
+	}
 	return $result && ! is_wp_error( $result );
 }
 

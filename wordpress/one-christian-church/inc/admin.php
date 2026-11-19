@@ -98,6 +98,31 @@ function occ_guide_page() {
 			</tbody>
 		</table>
 
+		<h2><?php esc_html_e( 'Cards: events, ministries, highlights and leaders', 'one-christian-church' ); ?></h2>
+		<p><?php esc_html_e( 'These card rows come from their own menus in the dashboard sidebar. Use "Add new" to add a card, click a card\'s name to change it, and "Trash" (or switching it to Draft) to take it off the site. New cards take the design\'s look automatically: pick a colour and an icon on the form.', 'one-christian-church' ); ?></p>
+		<table class="widefat striped" style="max-width:900px"><tbody>
+			<?php
+			$rows = array(
+				'occ_event'     => __( 'Events page: the weekly schedule ("Every week") and the "Mark your calendar" cards. A card with a date hides itself after the day, and can also be shown on Home.', 'one-christian-church' ),
+				'occ_ministry'  => __( 'Ministries page: the Kids & youth cards and the Adult ministries cards. The GriefShare and House Church sections are edited in Pages > Ministries.', 'one-christian-church' ),
+				'occ_highlight' => __( 'Home page: the "What\'s coming up" cards. A highlight can start and stop showing on set dates.', 'one-christian-church' ),
+				'occ_leader'    => __( 'About and Home pages: the "Meet our leaders" photos. Pastor Jerry\'s story is page text in Pages > About.', 'one-christian-church' ),
+			);
+			foreach ( $rows as $type => $what ) :
+				$obj = get_post_type_object( $type );
+				if ( ! $obj ) {
+					continue;
+				}
+				?>
+				<tr>
+					<td><strong><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . $type ) ); ?>"><?php echo esc_html( $obj->labels->name ); ?></a></strong></td>
+					<td><?php echo esc_html( $what ); ?></td>
+					<td><a class="button" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=' . $type ) ); ?>"><?php esc_html_e( 'Add new', 'one-christian-church' ); ?></a></td>
+				</tr>
+			<?php endforeach; ?>
+		</tbody></table>
+		<p><?php esc_html_e( 'On the pages, each of these rows shows as a "Design element" holding a code such as [occ_list row="events-weekly"]. Keep it where it is: it is what prints the cards. Everything else on the pages, including headings and the text around the cards, is edited in Pages as before.', 'one-christian-church' ); ?></p>
+
 		<h2><?php esc_html_e( 'Header, menu and footer', 'one-christian-church' ); ?></h2>
 		<ul class="ul-disc">
 			<li><a href="<?php echo esc_url( admin_url( 'nav-menus.php' ) ); ?>"><?php esc_html_e( 'Appearance > Menus', 'one-christian-church' ); ?></a>: <?php esc_html_e( '"Main menu" is the header menu; "Search shortcuts" are the links shown when search opens.', 'one-christian-church' ); ?></li>

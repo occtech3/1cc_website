@@ -43,6 +43,7 @@ require get_theme_file_path( 'inc/site-parts.php' );
 require get_theme_file_path( 'inc/content.php' );
 require get_theme_file_path( 'inc/forms.php' );
 require get_theme_file_path( 'inc/search.php' );
+require get_theme_file_path( 'inc/listings.php' );
 require get_theme_file_path( 'inc/admin.php' );
 
 add_action(
