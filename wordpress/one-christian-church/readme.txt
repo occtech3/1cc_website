@@ -26,12 +26,30 @@ staff can edit in WordPress. Appearance > Site guide (added by the theme) explai
    Other pages and posts are not touched. Old pages at other addresses (for example about-us, contact-us)
    stay published: set them to draft, or redirect them, once the new pages are approved.
 
+== Updating the theme ==
+
+Take a backup first. Then Appearance > Themes > Add New Theme > Upload Theme, choose the new zip, Install Now,
+and click "Replace active with uploaded". The pages keep their current content. Open any dashboard screen once
+afterwards: that is when version 0.5 moves the existing cards into the new menus and adds Pastor Jerry's story
+under the leaders on About.
+
 == Editing ==
 
 * Pages: Pages > Edit. Click any heading, paragraph, list, FAQ or photo to change it and Save. Coloured
   backgrounds, videos and icons are Custom HTML blocks, labelled "Design element", and [occ_...] codes.
   Each page's Excerpt (editor sidebar) is its search engine description.
   Edit these pages in the WordPress editor, not with "Edit with Elementor".
+* Cards: four menus in the dashboard sidebar, each with "Add new", edit and Trash:
+    - Events: the Events page's weekly schedule and "Mark your calendar" cards. A card with a date hides
+      itself after the day and can also be shown on Home.
+    - Ministries: the Kids & youth and Adult ministries cards on the Ministries page.
+    - Home Highlights: the Home page's "What's coming up" cards, with optional start and end dates.
+    - Leaders: the "Meet our leaders" photos on About and Home.
+  New cards take the design's look (choose a colour and an icon on the form). On the pages these rows are
+  "Design element" blocks holding [occ_list row="..."]; keep them in place.
+  When the theme is first activated, or updated to 0.5 on a site already using it, the cards already on those
+  pages are moved into these menus, one item per card, so the pages look exactly the same. The previous page
+  version stays in the page's revisions. A row that was rebuilt by hand beyond recognition is left as page content.
 * Header menu and search shortcuts: Appearance > Menus.
 * Promo strip, name next to the logo, "Plan a Visit" button: Appearance > Customize > Header.
 * Logo, site title, browser icon: Appearance > Customize > Site Identity. The design's own logo shows until

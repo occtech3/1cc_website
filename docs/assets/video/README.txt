@@ -13,7 +13,7 @@ Shortcut, from the project folder:
 hero.mp4  <-  https://mixkit.co/free-stock-video/guitarist-playing-on-stage-486/   (Guitarist on stage (home hero, Youth band))
 love-god.mp4  <-  https://mixkit.co/free-stock-video/a-long-haired-woman-singing-on-stage-478/   (Singer on stage (story: Love God))
 love-people.mp4  <-  https://mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537/   (Friends laughing (story: Love People))
-walk.mp4  <-  https://mixkit.co/free-stock-video/stunning-sunset-seen-from-the-sea-4119/   (Sunset over the sea (story: Walk with Jesus, About, GriefShare))
+walk.mp4  <-  https://mixkit.co/free-stock-video/stunning-sunset-seen-from-the-sea-4119/   (Sunset over the sea (story: Walk with Jesus, About))
 disciples.mp4  <-  https://mixkit.co/free-stock-video/audience-at-a-concert-4269/   (Crowd at a concert (story: Make Disciples, Events))
 kids.mp4  <-  https://mixkit.co/free-stock-video/three-kids-running-in-a-wooden-pier-48264/   (Kids running on a pier (Kids))
 youth.mp4  <-  https://mixkit.co/free-stock-video/a-couple-of-friends-sitting-laughing-with-their-cell-phones-4537/   (Friends laughing (OCC Youth card))
